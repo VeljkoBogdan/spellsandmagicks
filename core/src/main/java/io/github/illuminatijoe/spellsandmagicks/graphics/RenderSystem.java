@@ -46,7 +46,6 @@ public class RenderSystem extends IteratingSystem implements Disposable {
 
     @Override
     public void update(float deltaTime) {
-        ScreenUtils.clear(Color.BLACK);
         batch.begin();
         batch.setProjectionMatrix(camera.combined);
             super.update(deltaTime); // Calls processEntity for each entity

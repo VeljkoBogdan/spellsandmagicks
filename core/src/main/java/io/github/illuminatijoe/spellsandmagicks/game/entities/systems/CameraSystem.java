@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector3;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.CameraFollowComponent;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.PositionComponent;
 
+/// Handles the movement of the Camera
 public class CameraSystem extends IteratingSystem {
     private final OrthographicCamera camera;
     private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
@@ -24,11 +25,10 @@ public class CameraSystem extends IteratingSystem {
         PositionComponent position = pm.get(entity);
         if (position == null) return;
 
-        // Smooth camera movement (optional)
         Vector2 targetPos = position.position;
-        camera.position.lerp(new Vector3(targetPos.x, targetPos.y, 0), 0.1f);
+        float lerpFactor = 1.0f - (float) Math.pow(0.001, deltaTime);
+        camera.position.lerp(new Vector3(targetPos.x, targetPos.y, 0), lerpFactor);
 
-        // Apply the changes
         camera.update();
     }
 }

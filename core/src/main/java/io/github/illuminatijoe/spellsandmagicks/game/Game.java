@@ -8,26 +8,26 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.Player;
-import io.github.illuminatijoe.spellsandmagicks.game.entities.systems.CameraSystem;
-import io.github.illuminatijoe.spellsandmagicks.game.entities.systems.EnemyMovementSystem;
+import io.github.illuminatijoe.spellsandmagicks.game.entities.systems.*;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.Slime;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.*;
-import io.github.illuminatijoe.spellsandmagicks.game.entities.systems.MovementSystem;
-import io.github.illuminatijoe.spellsandmagicks.game.entities.systems.PlayerControllerSystem;
 import io.github.illuminatijoe.spellsandmagicks.graphics.AssetLoader;
 import io.github.illuminatijoe.spellsandmagicks.graphics.RenderSystem;
 
 public class Game implements Disposable {
+    public boolean paused = false;
     public Engine engine;
     public AssetLoader assetLoader;
     public RenderSystem renderSystem;
     public Player player;
     public float deltaTime = 0f;
     public OrthographicCamera camera;
+    public TileRendererSystem tileRendererSystem;
 
     public Game() {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        camera.zoom *= 1.5f;
         camera.update();
 
         // Load assets
@@ -49,6 +49,8 @@ public class Game implements Disposable {
 
         // Init engine and systems
         engine = new Engine();
+        tileRendererSystem = new TileRendererSystem(camera);
+        engine.addSystem(tileRendererSystem);
         engine.addSystem(new EnemyMovementSystem());
         engine.addSystem(new RenderSystem(camera));
         engine.addSystem(new MovementSystem());
@@ -57,18 +59,28 @@ public class Game implements Disposable {
 
         engine.addEntity(player);
         engine.addEntity(slime);
-
     }
 
     @Override
     public void dispose() {
         assetLoader.dispose();
         renderSystem.dispose();
+        tileRendererSystem.dispose();
     }
 
     public void render() {
+        if (paused) return;
+
         deltaTime = Gdx.graphics.getDeltaTime();
 
         engine.update(deltaTime);
+    }
+
+    public void pause() {
+        this.paused = true;
+    }
+
+    public void unpause() {
+        this.paused = false;
     }
 }
