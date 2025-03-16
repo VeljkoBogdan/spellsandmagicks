@@ -11,6 +11,7 @@ public class AssetLoader implements Disposable {
     public TextureAtlas textureAtlas;
     public final AssetManager assetManager;
     public static Animation<TextureRegion> playerAnimation;
+    public static Animation<TextureRegion> slimeAnimation;
 
     public AssetLoader(AssetManager assetManager) {
         this.assetManager = assetManager;
@@ -18,14 +19,24 @@ public class AssetLoader implements Disposable {
 
     public void load() {
         createAtlases();
+        loadAnimations();
 
+        System.out.println("Assets loaded!");
+    }
+
+    private void loadAnimations() {
         playerAnimation = new Animation<>(
             0.1f,
             textureAtlas.findRegions("wizard_walk"),
             Animation.PlayMode.LOOP
         );
+        slimeAnimation = new Animation<>(
+            0.1f,
+            textureAtlas.findRegions("slime_walk"),
+            Animation.PlayMode.LOOP
+        );
 
-        System.out.println("Assets loaded!");
+        System.out.println("Loaded animations!");
     }
 
     public Animation<TextureRegion> getPlayerAnimation() {
@@ -53,5 +64,9 @@ public class AssetLoader implements Disposable {
     public void dispose() {
         textureAtlas.dispose();
         assetManager.dispose();
+    }
+
+    public Animation<TextureRegion> getSlimeAnimation() {
+        return slimeAnimation;
     }
 }

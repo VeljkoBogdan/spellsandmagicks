@@ -13,16 +13,19 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void create() {
+        // Start of game
         game = new Game();
     }
 
     @Override
     public void render() {
+        // Game update
         game.render();
     }
 
     @Override
     public void dispose() {
+        // Game disposal
         game.dispose();
     }
 }

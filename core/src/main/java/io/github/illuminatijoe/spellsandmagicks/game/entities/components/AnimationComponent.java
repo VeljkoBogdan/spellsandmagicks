@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class AnimationComponent implements Component {
     public Animation<TextureRegion> animation;
     public float stateTime = 0f;
+    public boolean facingLeft = false;
+    public boolean idle = false;
 
     public AnimationComponent(Animation<TextureRegion> animation) {
         this.animation = animation;
