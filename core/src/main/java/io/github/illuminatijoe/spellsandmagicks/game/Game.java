@@ -3,7 +3,6 @@ package io.github.illuminatijoe.spellsandmagicks.game;
 import com.badlogic.ashley.core.Engine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Disposable;
@@ -34,31 +33,22 @@ public class Game implements Disposable {
         assetLoader = new AssetLoader(new AssetManager());
         assetLoader.load();
 
-        player = new Player();
-        player.add(new AnimationComponent(assetLoader.getPlayerAnimation()));
-        player.add(new PositionComponent(new Vector2(100, 100)));
-        player.add(new VelocityComponent());
-        player.add(new ControllableComponent());
-        player.add(new CameraFollowComponent());
-
-        Slime slime = new Slime();
-        slime.add(new AnimationComponent(assetLoader.getSlimeAnimation()));
-        slime.add(new PositionComponent(new Vector2(500, 500)));
-        slime.add(new VelocityComponent());
-        slime.add(new TargetComponent(player));
+        player = new Player(assetLoader);
 
         // Init engine and systems
         engine = new Engine();
         tileRendererSystem = new TileRendererSystem(camera);
         engine.addSystem(tileRendererSystem);
         engine.addSystem(new EnemyMovementSystem());
-        engine.addSystem(new RenderSystem(camera));
+        renderSystem = new RenderSystem(camera);
+        engine.addSystem(renderSystem);
         engine.addSystem(new MovementSystem());
         engine.addSystem(new PlayerControllerSystem());
         engine.addSystem(new CameraSystem(camera));
+        engine.addSystem(new EntitySpawnerSystem(camera, assetLoader, player));
+        engine.addSystem(new CollisionSystem(200));
 
         engine.addEntity(player);
-        engine.addEntity(slime);
     }
 
     @Override
@@ -82,5 +72,9 @@ public class Game implements Disposable {
 
     public void unpause() {
         this.paused = false;
+    }
+
+    public void togglePause() {
+        paused = !paused;
     }
 }
