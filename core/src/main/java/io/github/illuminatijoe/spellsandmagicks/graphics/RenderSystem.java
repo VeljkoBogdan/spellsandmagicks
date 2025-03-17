@@ -4,12 +4,10 @@ import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Disposable;
-import com.badlogic.gdx.utils.ScreenUtils;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.AnimationComponent;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.PositionComponent;
 
@@ -36,7 +34,7 @@ public class RenderSystem extends IteratingSystem implements Disposable {
 
         TextureRegion currentFrame = animation.getKeyFrame();
 
-        // Flip texture if needed
+        // Flip texture
         if (animation.facingLeft != currentFrame.isFlipX()) {
             currentFrame.flip(true, false);
         }

@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.Disposable;
 import io.github.illuminatijoe.spellsandmagicks.Main;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.Player;
+import io.github.illuminatijoe.spellsandmagicks.game.entities.projectiles.FireballMovingSystem;
+import io.github.illuminatijoe.spellsandmagicks.game.entities.projectiles.FireballShootingSystem;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.systems.*;
 import io.github.illuminatijoe.spellsandmagicks.graphics.AssetLoader;
 import io.github.illuminatijoe.spellsandmagicks.graphics.RenderSystem;
@@ -20,13 +22,13 @@ public class Game implements Disposable {
     public float deltaTime = 0f;
     public OrthographicCamera camera;
     public TileRendererSystem tileRendererSystem;
-    private Main main;
+    private final Main main;
 
     public Game(Main main) {
         this.main = main;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        camera.zoom *= 1.5f;
+        camera.zoom *= 1.0f;
         camera.update();
 
         // Load assets
@@ -48,6 +50,8 @@ public class Game implements Disposable {
         engine.addSystem(new EntitySpawnerSystem(camera, assetLoader, player));
         engine.addSystem(new CollisionSystem(32));
         engine.addSystem(new HealthSystem());
+        engine.addSystem(new FireballMovingSystem());
+        engine.addSystem(new FireballShootingSystem());
 
         engine.addEntity(player);
     }

@@ -35,11 +35,7 @@ public class HealthComponent implements Component, Pool.Poolable {
     public void updateIFrames(float delta) {
         iTimer -= delta;
 
-        if (iTimer <= 0f) {
-            canBeHurt = true;
-        } else {
-            canBeHurt = false;
-        }
+        canBeHurt = iTimer <= 0f;
     }
 
     @Override

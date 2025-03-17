@@ -4,7 +4,6 @@ import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
 import io.github.illuminatijoe.spellsandmagicks.game.core.SpatialGrid;
-import io.github.illuminatijoe.spellsandmagicks.game.entities.Player;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.*;
 
 import java.util.Set;
@@ -12,9 +11,11 @@ import java.util.Set;
 public class CollisionSystem extends EntitySystem {
     private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private final ComponentMapper<PlayerComponent> playerMapper = ComponentMapper.getFor(PlayerComponent.class);
-    private final ComponentMapper<EnemyComponent> em = ComponentMapper.getFor(EnemyComponent.class);
+    private final ComponentMapper<EnemyComponent> enemyMapper = ComponentMapper.getFor(EnemyComponent.class);
     private final ComponentMapper<HealthComponent> hm = ComponentMapper.getFor(HealthComponent.class);
     private final ComponentMapper<AttackComponent> am = ComponentMapper.getFor(AttackComponent.class);
+    private final ComponentMapper<ProjectileComponent> projectileMapper = ComponentMapper.getFor(ProjectileComponent.class);
+    private final ComponentMapper<CollisionComponent> collisionMapper = ComponentMapper.getFor(CollisionComponent.class);
     private final SpatialGrid spatialGrid;
     private ImmutableArray<Entity> entities;
 
@@ -49,10 +50,17 @@ public class CollisionSystem extends EntitySystem {
     }
 
     private void handleCollision(Entity entity, Entity other) {
+        CollisionComponent collisionComponentFirstEntity = collisionMapper.get(entity);
+        CollisionComponent collisionComponentSecondEntity = collisionMapper.get(other);
+
+        boolean isAProjectile = projectileMapper.has(entity);
+        boolean isBProjectile = projectileMapper.has(other);
         boolean isAPlayer = playerMapper.has(entity);
         boolean isBPlayer = playerMapper.has(other);
-        boolean isAEnemy = em.has(entity);
-        boolean isBEnemy = em.has(other);
+        boolean isAEnemy = enemyMapper.has(entity);
+        boolean isBEnemy = enemyMapper.has(other);
+
+        if (collisionComponentFirstEntity.mask.equals(collisionComponentSecondEntity.mask)) return;
 
         if (entity != other && aabbCollision(pm.get(entity), 22, 22, pm.get(other), 22, 22)) {
             Vector2 dir = pm.get(entity).position.cpy().sub(pm.get(other).position).nor();
@@ -62,18 +70,24 @@ public class CollisionSystem extends EntitySystem {
 
             if (isAPlayer && isBEnemy) {
                 AttackComponent attackComponent = am.get(other);
-                damageEntity(entity, attackComponent);
+                damageEntity(entity, attackComponent.damage);
             } else if (isBPlayer && isAEnemy) {
                 AttackComponent attackComponent = am.get(entity);
-                damageEntity(other, attackComponent);
+                damageEntity(other, attackComponent.damage);
+            } else if (isAProjectile && isBEnemy) {
+                damageEntity(other, am.get(entity).damage);
+                getEngine().removeEntity(entity); // remove proj
+            } else if (isBProjectile && isAEnemy) {
+                damageEntity(entity, am.get(other).damage);
+                getEngine().removeEntity(other); // remove proj
             }
         }
     }
 
-    private void damageEntity(Entity entity, AttackComponent attackComponent) {
+    private void damageEntity(Entity entity, float damage) {
         HealthComponent healthComponent = hm.get(entity);
         if (healthComponent != null) {
-            healthComponent.decreaseHealth(attackComponent.damage);
+            healthComponent.decreaseHealth(damage);
         }
     }
 

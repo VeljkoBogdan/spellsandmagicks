@@ -8,10 +8,12 @@ import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.utils.Disposable;
 
 public class AssetLoader implements Disposable {
-    public TextureAtlas textureAtlas;
+    public TextureAtlas entityAtlas;
+    public TextureAtlas projectileAtlas;
     public final AssetManager assetManager;
     public static Animation<TextureRegion> playerAnimation;
     public static Animation<TextureRegion> slimeAnimation;
+    public static Animation<TextureRegion> fireballAnimation;
 
     public AssetLoader(AssetManager assetManager) {
         this.assetManager = assetManager;
@@ -27,12 +29,17 @@ public class AssetLoader implements Disposable {
     private void loadAnimations() {
         playerAnimation = new Animation<>(
             0.1f,
-            textureAtlas.findRegions("wizard_walk"),
+            entityAtlas.findRegions("wizard_walk"),
             Animation.PlayMode.LOOP
         );
         slimeAnimation = new Animation<>(
             0.1f,
-            textureAtlas.findRegions("slime_walk"),
+            entityAtlas.findRegions("slime_walk"),
+            Animation.PlayMode.LOOP
+        );
+        fireballAnimation = new Animation<>(
+            0.1f,
+            projectileAtlas.findRegions("fireball"),
             Animation.PlayMode.LOOP
         );
 
@@ -46,7 +53,8 @@ public class AssetLoader implements Disposable {
     private void createAtlases() {
         packTextures();
 
-        textureAtlas = new TextureAtlas("textures/entities/entities.atlas");
+        entityAtlas = new TextureAtlas("textures/entities/entities.atlas");
+        projectileAtlas = new TextureAtlas("textures/projectiles/projectiles.atlas");
         System.out.println("Atlases created!");
     }
 
@@ -57,12 +65,19 @@ public class AssetLoader implements Disposable {
             "entities"
         );
 
+        TexturePacker.process(
+            "textures/projectiles",
+            "textures/projectiles",
+            "projectiles"
+        );
+
         System.out.println("Textures packed!");
     }
 
     @Override
     public void dispose() {
-        textureAtlas.dispose();
+        entityAtlas.dispose();
+        projectileAtlas.dispose();
         assetManager.dispose();
     }
 

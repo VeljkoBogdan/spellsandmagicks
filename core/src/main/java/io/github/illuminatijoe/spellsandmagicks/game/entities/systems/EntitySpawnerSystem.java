@@ -19,7 +19,7 @@ public class EntitySpawnerSystem extends IteratingSystem {
     private final Player player;
     private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
 
-    public float spawnRate = 0.1f;
+    public float spawnRate = 1f;
     public float currentTime = 0f;
 
     public EntitySpawnerSystem(OrthographicCamera camera, AssetLoader assetLoader, Player player) {

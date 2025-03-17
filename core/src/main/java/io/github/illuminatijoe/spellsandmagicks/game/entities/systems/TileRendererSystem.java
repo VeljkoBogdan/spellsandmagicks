@@ -27,7 +27,7 @@ public class TileRendererSystem extends IteratingSystem implements Disposable {
         super(Family.all(PositionComponent.class, ControllableComponent.class).get());
 
         this.tileSize = 512;
-        this.renderDistance = 3;
+        this.renderDistance = 4;
         batch = new SpriteBatch();
         texture = new Texture("textures/tiles/grass.png");
 

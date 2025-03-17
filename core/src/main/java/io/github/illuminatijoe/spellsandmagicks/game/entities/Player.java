@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import io.github.illuminatijoe.spellsandmagicks.game.Game;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.*;
 import io.github.illuminatijoe.spellsandmagicks.graphics.AssetLoader;
+import io.github.illuminatijoe.spellsandmagicks.util.Collision;
 
 public class Player extends Entity {
 
@@ -14,7 +15,7 @@ public class Player extends Entity {
         this.add(new VelocityComponent());
         this.add(new ControllableComponent());
         this.add(new CameraFollowComponent());
-        this.add(new CollisionComponent());
+        this.add(new CollisionComponent(Collision.FRIENDLY));
         this.add(new HealthComponent(100f, 0.5f, game::playerKilled));
         this.add(new PlayerComponent());
     }
