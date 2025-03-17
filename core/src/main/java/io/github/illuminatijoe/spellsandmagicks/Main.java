@@ -19,7 +19,7 @@ public class Main extends ApplicationAdapter {
     @Override
     public void create() {
         // Start of game
-        game = new Game();
+        game = new Game(this);
         bitmapFont = new BitmapFont();
         debugBatch = new SpriteBatch();
     }
@@ -38,11 +38,20 @@ public class Main extends ApplicationAdapter {
         }
 
         int textOffset = Gdx.graphics.getHeight() - 10;
-        debugBatch.begin();
-            bitmapFont.draw(debugBatch, String.valueOf(Gdx.graphics.getFramesPerSecond()) + " FPS", 10, textOffset);
-            textOffset-=20;
-            bitmapFont.draw(debugBatch, String.valueOf(Gdx.app.getJavaHeap() / 1000 / 1000) + " MB", 10, textOffset);
-        debugBatch.end();
+        if (!game.paused) {
+            debugBatch.begin();
+                bitmapFont.draw(debugBatch, String.valueOf(Gdx.graphics.getFramesPerSecond()) + " FPS", 10, textOffset);
+                textOffset-=20;
+                bitmapFont.draw(debugBatch, String.valueOf(Gdx.app.getJavaHeap() / 1000 / 1000) + " MB", 10, textOffset);
+                textOffset-=20;
+                bitmapFont.draw(debugBatch, String.valueOf(game.getEntityAmount()) + " entities", 10, textOffset);
+            debugBatch.end();
+        }
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        super.resize(width, height);
     }
 
     @Override
@@ -51,5 +60,9 @@ public class Main extends ApplicationAdapter {
         game.dispose();
         debugBatch.dispose();
         bitmapFont.dispose();
+    }
+
+    public void showEndScreen() {
+        Gdx.app.exit();
     }
 }

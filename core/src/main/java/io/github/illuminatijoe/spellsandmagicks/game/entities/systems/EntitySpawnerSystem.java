@@ -12,7 +12,6 @@ import io.github.illuminatijoe.spellsandmagicks.game.entities.Slime;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.ControllableComponent;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.PositionComponent;
 import io.github.illuminatijoe.spellsandmagicks.graphics.AssetLoader;
-import org.lwjgl.Sys;
 
 public class EntitySpawnerSystem extends IteratingSystem {
     private final OrthographicCamera camera;
@@ -20,7 +19,7 @@ public class EntitySpawnerSystem extends IteratingSystem {
     private final Player player;
     private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
 
-    public float spawnRate = 0.2f;
+    public float spawnRate = 0.1f;
     public float currentTime = 0f;
 
     public EntitySpawnerSystem(OrthographicCamera camera, AssetLoader assetLoader, Player player) {
