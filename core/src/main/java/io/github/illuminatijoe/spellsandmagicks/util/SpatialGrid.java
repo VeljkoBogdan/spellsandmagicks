@@ -1,4 +1,4 @@
-package io.github.illuminatijoe.spellsandmagicks.game.core;
+package io.github.illuminatijoe.spellsandmagicks.util;
 
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.gdx.math.Vector2;

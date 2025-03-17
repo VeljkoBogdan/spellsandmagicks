@@ -7,11 +7,13 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.utils.Disposable;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.AnimationComponent;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.PositionComponent;
 
 public class RenderSystem extends IteratingSystem implements Disposable {
+    private ShaderProgram shader;
     private final SpriteBatch batch;
     private OrthographicCamera camera;
     private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
@@ -21,6 +23,14 @@ public class RenderSystem extends IteratingSystem implements Disposable {
         super(Family.all(AnimationComponent.class, PositionComponent.class).get());
         this.batch = new SpriteBatch();
         this.camera = camera;
+    }
+
+    @Override
+    public void update(float deltaTime) {
+        batch.begin();
+            batch.setProjectionMatrix(camera.combined);
+            super.update(deltaTime);
+        batch.end();
     }
 
     @Override
@@ -43,15 +53,8 @@ public class RenderSystem extends IteratingSystem implements Disposable {
     }
 
     @Override
-    public void update(float deltaTime) {
-        batch.begin();
-        batch.setProjectionMatrix(camera.combined);
-            super.update(deltaTime); // Calls processEntity for each entity
-        batch.end();
-    }
-
-    @Override
     public void dispose() {
         batch.dispose();
+        shader.dispose();
     }
 }

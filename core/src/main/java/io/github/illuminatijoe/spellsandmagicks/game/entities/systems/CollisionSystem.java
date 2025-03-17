@@ -3,7 +3,7 @@ package io.github.illuminatijoe.spellsandmagicks.game.entities.systems;
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
-import io.github.illuminatijoe.spellsandmagicks.game.core.SpatialGrid;
+import io.github.illuminatijoe.spellsandmagicks.util.SpatialGrid;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.*;
 
 import java.util.Set;
