@@ -22,10 +22,12 @@ public class Game implements Disposable {
     public Player player;
     public float deltaTime = 0f;
     public OrthographicCamera camera;
+    private final Main main;
+
     public RenderSystem renderSystem;
     public TileRendererSystem tileRendererSystem;
     public MasterRenderSystem masterRenderSystem;
-    private final Main main;
+    public HpRenderSystem hpRenderSystem;
 
     public Game(Main main) {
         this.main = main;
@@ -45,9 +47,11 @@ public class Game implements Disposable {
         // rendering
         tileRendererSystem = new TileRendererSystem(engine);
         renderSystem = new RenderSystem(engine);
+        hpRenderSystem = new HpRenderSystem(engine);
+        engine.addSystem(hpRenderSystem);
 //        engine.addSystem(tileRendererSystem);
 //        engine.addSystem(renderSystem);
-        List<RenderableSystem> renderableSystems = Arrays.asList(tileRendererSystem, renderSystem);
+        List<RenderableSystem> renderableSystems = Arrays.asList(tileRendererSystem, renderSystem, hpRenderSystem);
         masterRenderSystem = new MasterRenderSystem(camera, renderableSystems);
         engine.addSystem(masterRenderSystem);
 
@@ -64,12 +68,6 @@ public class Game implements Disposable {
         engine.addEntity(player);
     }
 
-    @Override
-    public void dispose() {
-        assetLoader.dispose();
-        tileRendererSystem.dispose();
-        masterRenderSystem.dispose();
-    }
 
     public void render() {
         if (paused) return;
@@ -98,5 +96,13 @@ public class Game implements Disposable {
     public void playerKilled() {
         engine.removeAllEntities();
         this.main.showEndScreen();
+    }
+
+    @Override
+    public void dispose() {
+        assetLoader.dispose();
+        tileRendererSystem.dispose();
+        hpRenderSystem.dispose();
+        masterRenderSystem.dispose();
     }
 }

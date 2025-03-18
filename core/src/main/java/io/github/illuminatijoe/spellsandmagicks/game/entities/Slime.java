@@ -13,7 +13,7 @@ public class Slime extends Entity {
         this.add(new VelocityComponent());
         this.add(new TargetComponent(player));
         this.add(new CollisionComponent(Collision.HOSTILE));
-        this.add(new HealthComponent(25f, 0.1f, null));
+        this.add(new HealthComponent(100f, 0.1f, null));
         this.add(new AttackComponent(25f));
         this.add(new EnemyComponent());
     }

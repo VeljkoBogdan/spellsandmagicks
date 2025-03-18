@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.Component;
 import com.badlogic.gdx.utils.Pool;
 
 public class HealthComponent implements Component, Pool.Poolable {
+    public float maxHealth = 100f;
     public float health = 100f;
     public boolean isDead = false;
     public Runnable onDeath = null;
@@ -12,8 +13,9 @@ public class HealthComponent implements Component, Pool.Poolable {
     public float iFramesDuration = 0.5f;
     public float iTimer = 0f;
 
-    public HealthComponent(float health, float iFramesDuration, Runnable runnable) {
-        this.health = health;
+    public HealthComponent(float maxHealth, float iFramesDuration, Runnable runnable) {
+        this.maxHealth = maxHealth;
+        this.health = maxHealth;
         this.onDeath = runnable;
         this.iFramesDuration = iFramesDuration;
     }
@@ -40,6 +42,7 @@ public class HealthComponent implements Component, Pool.Poolable {
 
     @Override
     public void reset() {
+        maxHealth = 100f;
         health = 100f;
         isDead = false;
         onDeath = null;
