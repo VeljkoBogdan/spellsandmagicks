@@ -32,6 +32,8 @@ public class Game implements Disposable {
     public HpRenderSystem hpRenderSystem;
     public ExperienceRenderSystem experienceRenderSystem;
 
+    public EntitySpawnerSystem entitySpawnerSystem;
+
     public Game(SpellsAndMagicksGame spellsAndMagicksGame, GameScreen gameScreen) {
         this.spellsAndMagicksGame = spellsAndMagicksGame;
         this.gameScreen = gameScreen;
@@ -61,7 +63,10 @@ public class Game implements Disposable {
         engine.addSystem(new MovementSystem());
         engine.addSystem(new PlayerControllerSystem());
         engine.addSystem(new CameraSystem(camera));
-        engine.addSystem(new EntitySpawnerSystem(camera, assetLoader, player));
+
+        entitySpawnerSystem = new EntitySpawnerSystem(camera, assetLoader, player);
+        engine.addSystem(entitySpawnerSystem);
+
         engine.addSystem(new CollisionSystem(32, player));
         engine.addSystem(new HealthSystem());
         engine.addSystem(new FireballMovingSystem());
@@ -91,5 +96,6 @@ public class Game implements Disposable {
 
     public void onLevelUp() {
         gameScreen.onLevelUp();
+        entitySpawnerSystem.increaseDifficulty();
     }
 }

@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.Player;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.Slime;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.ControllableComponent;
+import io.github.illuminatijoe.spellsandmagicks.game.entities.components.HealthComponent;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.PositionComponent;
 import io.github.illuminatijoe.spellsandmagicks.graphics.AssetLoader;
 
@@ -17,9 +18,11 @@ public class EntitySpawnerSystem extends IteratingSystem {
     private final OrthographicCamera camera;
     private final AssetLoader assetLoader;
     private final Player player;
-    private ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
+    private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
+    private final ComponentMapper<HealthComponent> healthMapper = ComponentMapper.getFor(HealthComponent.class);
 
     public float spawnRate = 1f;
+    public float difficultyFactor = 1f;
     public float currentTime = 0f;
 
     public EntitySpawnerSystem(OrthographicCamera camera, AssetLoader assetLoader, Player player) {
@@ -37,12 +40,11 @@ public class EntitySpawnerSystem extends IteratingSystem {
         } else {
             currentTime += v;
         }
-
-        increaseDifficulty(v);
     }
 
-    public void increaseDifficulty(float delta) {
-        spawnRate -= (spawnRate * 0.0015f) * delta;
+    public void increaseDifficulty() {
+        spawnRate *= 0.9f;
+        difficultyFactor *= 1.1f;
     }
 
     public void spawnEntity(Entity entity, float v) {
@@ -60,7 +62,11 @@ public class EntitySpawnerSystem extends IteratingSystem {
         float margin = 50f;
         Vector2 offScreenPos = getRandomOffScreenPosition(leftX, rightX, downY, upY, margin);
 
-        getEngine().addEntity(new Slime(assetLoader, player, offScreenPos));
+        Slime slime = new Slime(assetLoader, player, offScreenPos);
+        healthMapper.get(slime).maxHealth *= difficultyFactor;
+        healthMapper.get(slime).health = healthMapper.get(slime).maxHealth;
+
+        getEngine().addEntity(slime);
     }
 
     public Vector2 getRandomOffScreenPosition(float leftX, float rightX, float downY, float upY, float margin) {
