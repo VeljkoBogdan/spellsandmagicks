@@ -11,11 +11,14 @@ import io.github.illuminatijoe.spellsandmagicks.game.entities.projectiles.Fireba
 import io.github.illuminatijoe.spellsandmagicks.game.entities.projectiles.FireballShootingSystem;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.systems.*;
 import io.github.illuminatijoe.spellsandmagicks.graphics.*;
+import io.github.illuminatijoe.spellsandmagicks.ui.GameScreen;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class Game implements Disposable {
+    private final SpellsAndMagicksGame spellsAndMagicksGame;
+    private final GameScreen gameScreen;
     public boolean paused = false;
     public Engine engine;
     public AssetLoader assetLoader;
@@ -29,7 +32,9 @@ public class Game implements Disposable {
     public HpRenderSystem hpRenderSystem;
     public ExperienceRenderSystem experienceRenderSystem;
 
-    public Game(SpellsAndMagicksGame spellsAndMagicksGame) {
+    public Game(SpellsAndMagicksGame spellsAndMagicksGame, GameScreen gameScreen) {
+        this.spellsAndMagicksGame = spellsAndMagicksGame;
+        this.gameScreen = gameScreen;
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.zoom *= 1.0f;
@@ -82,5 +87,9 @@ public class Game implements Disposable {
         tileRendererSystem.dispose();
         hpRenderSystem.dispose();
         masterRenderSystem.dispose();
+    }
+
+    public void onLevelUp() {
+        gameScreen.onLevelUp();
     }
 }
