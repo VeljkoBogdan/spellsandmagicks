@@ -3,6 +3,7 @@ package io.github.illuminatijoe.spellsandmagicks.game.entities.systems;
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
+import io.github.illuminatijoe.spellsandmagicks.game.entities.Player;
 import io.github.illuminatijoe.spellsandmagicks.util.SpatialGrid;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.*;
 
@@ -16,11 +17,14 @@ public class CollisionSystem extends EntitySystem {
     private final ComponentMapper<AttackComponent> am = ComponentMapper.getFor(AttackComponent.class);
     private final ComponentMapper<ProjectileComponent> projectileMapper = ComponentMapper.getFor(ProjectileComponent.class);
     private final ComponentMapper<CollisionComponent> collisionMapper = ComponentMapper.getFor(CollisionComponent.class);
+    private final ComponentMapper<ExperienceComponent> experienceMapper = ComponentMapper.getFor(ExperienceComponent.class);
     private final SpatialGrid spatialGrid;
     private ImmutableArray<Entity> entities;
+    private Player player;
 
-    public CollisionSystem(int gridSize) {
+    public CollisionSystem(int gridSize, Player player) {
         spatialGrid = new SpatialGrid(gridSize);
+        this.player = player;
     }
 
     @Override
@@ -88,6 +92,12 @@ public class CollisionSystem extends EntitySystem {
         HealthComponent healthComponent = hm.get(entity);
         if (healthComponent != null) {
             healthComponent.decreaseHealth(damage);
+
+            if (healthComponent.isDead) {
+                ExperienceComponent xpComponent = experienceMapper.get(player);
+                xpComponent.addXp(25);
+                System.out.println(xpComponent.experience);
+            }
         }
     }
 

@@ -18,5 +18,6 @@ public class Player extends Entity {
         this.add(new CollisionComponent(Collision.FRIENDLY));
         this.add(new HealthComponent(100f, 0.5f, game::playerKilled));
         this.add(new PlayerComponent());
+        this.add(new ExperienceComponent());
     }
 }

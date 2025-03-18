@@ -10,18 +10,21 @@ import io.github.illuminatijoe.spellsandmagicks.game.entities.Player;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.projectiles.FireballMovingSystem;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.projectiles.FireballShootingSystem;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.systems.*;
-import io.github.illuminatijoe.spellsandmagicks.graphics.AssetLoader;
-import io.github.illuminatijoe.spellsandmagicks.graphics.RenderSystem;
+import io.github.illuminatijoe.spellsandmagicks.graphics.*;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class Game implements Disposable {
     public boolean paused = false;
     public Engine engine;
     public AssetLoader assetLoader;
-    public RenderSystem renderSystem;
     public Player player;
     public float deltaTime = 0f;
     public OrthographicCamera camera;
+    public RenderSystem renderSystem;
     public TileRendererSystem tileRendererSystem;
+    public MasterRenderSystem masterRenderSystem;
     private final Main main;
 
     public Game(Main main) {
@@ -39,16 +42,21 @@ public class Game implements Disposable {
 
         // Init engine and systems
         engine = new Engine();
-        tileRendererSystem = new TileRendererSystem(camera);
-        engine.addSystem(tileRendererSystem);
+        // rendering
+        tileRendererSystem = new TileRendererSystem(engine);
+        renderSystem = new RenderSystem(engine);
+//        engine.addSystem(tileRendererSystem);
+//        engine.addSystem(renderSystem);
+        List<RenderableSystem> renderableSystems = Arrays.asList(tileRendererSystem, renderSystem);
+        masterRenderSystem = new MasterRenderSystem(camera, renderableSystems);
+        engine.addSystem(masterRenderSystem);
+
         engine.addSystem(new EnemyMovementSystem());
-        renderSystem = new RenderSystem(camera);
-        engine.addSystem(renderSystem);
         engine.addSystem(new MovementSystem());
         engine.addSystem(new PlayerControllerSystem());
         engine.addSystem(new CameraSystem(camera));
         engine.addSystem(new EntitySpawnerSystem(camera, assetLoader, player));
-        engine.addSystem(new CollisionSystem(32));
+        engine.addSystem(new CollisionSystem(32, player));
         engine.addSystem(new HealthSystem());
         engine.addSystem(new FireballMovingSystem());
         engine.addSystem(new FireballShootingSystem());
@@ -59,8 +67,8 @@ public class Game implements Disposable {
     @Override
     public void dispose() {
         assetLoader.dispose();
-        renderSystem.dispose();
         tileRendererSystem.dispose();
+        masterRenderSystem.dispose();
     }
 
     public void render() {
