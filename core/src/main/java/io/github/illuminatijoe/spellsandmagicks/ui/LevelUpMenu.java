@@ -1,8 +1,11 @@
 package io.github.illuminatijoe.spellsandmagicks.ui;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -15,6 +18,7 @@ public class LevelUpMenu {
     private final SpriteBatch batch;
     private final BitmapFont font;
     private final Stage stage;
+    private Texture background;
 
     private final String[] options = {
         "Increase Health",
@@ -27,6 +31,12 @@ public class LevelUpMenu {
         this.batch = new SpriteBatch();
         this.font = new BitmapFont();
         this.stage = new Stage();
+
+        Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
+        pixmap.setColor(0, 0, 0.1f, 0.75f);
+        pixmap.fill();
+        background = new Texture(pixmap);
+        pixmap.dispose();
     }
 
     public void show() {
@@ -45,7 +55,10 @@ public class LevelUpMenu {
 
     public void render() {
         if (!visible) return;
+
         batch.begin();
+            // opacity bg
+            batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
             int pos = 0;
             for (String option : options) {
@@ -76,5 +89,6 @@ public class LevelUpMenu {
     public void dispose() {
         batch.dispose();
         font.dispose();
+        background.dispose();
     }
 }
