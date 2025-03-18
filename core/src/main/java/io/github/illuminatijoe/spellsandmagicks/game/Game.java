@@ -28,6 +28,7 @@ public class Game implements Disposable {
     public TileRendererSystem tileRendererSystem;
     public MasterRenderSystem masterRenderSystem;
     public HpRenderSystem hpRenderSystem;
+    public ExperienceRenderSystem experienceRenderSystem;
 
     public Game(Main main) {
         this.main = main;
@@ -48,10 +49,10 @@ public class Game implements Disposable {
         tileRendererSystem = new TileRendererSystem(engine);
         renderSystem = new RenderSystem(engine);
         hpRenderSystem = new HpRenderSystem(engine);
-        engine.addSystem(hpRenderSystem);
+        experienceRenderSystem = new ExperienceRenderSystem(engine);
 //        engine.addSystem(tileRendererSystem);
 //        engine.addSystem(renderSystem);
-        List<RenderableSystem> renderableSystems = Arrays.asList(tileRendererSystem, renderSystem, hpRenderSystem);
+        List<RenderableSystem> renderableSystems = Arrays.asList(tileRendererSystem, renderSystem, hpRenderSystem, experienceRenderSystem);
         masterRenderSystem = new MasterRenderSystem(camera, renderableSystems);
         engine.addSystem(masterRenderSystem);
 

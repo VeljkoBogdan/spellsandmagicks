@@ -8,11 +8,12 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
+import io.github.illuminatijoe.spellsandmagicks.game.entities.components.ExperienceComponent;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.HealthComponent;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.PositionComponent;
 
-public class HpRenderSystem extends EntitySystem implements RenderableSystem, Disposable {
-    private final ComponentMapper<HealthComponent> healthMapper = ComponentMapper.getFor(HealthComponent.class);
+public class ExperienceRenderSystem extends EntitySystem implements RenderableSystem, Disposable {
+    private final ComponentMapper<ExperienceComponent> xpMapper = ComponentMapper.getFor(ExperienceComponent.class);
     private final ComponentMapper<PositionComponent> positionMapper = ComponentMapper.getFor(PositionComponent.class);
     private ImmutableArray<Entity> entities;
     private final Texture whiteTexture;
@@ -20,10 +21,10 @@ public class HpRenderSystem extends EntitySystem implements RenderableSystem, Di
     public float barWidth = 50f;
     public float barHeight = 5f;
     public float xOffset = -barWidth / 5f;
-    public float yOffset = 20f;
+    public float yOffset = 29f;
 
-    public HpRenderSystem(Engine engine) {
-        entities = engine.getEntitiesFor(Family.all(HealthComponent.class, PositionComponent.class).get());
+    public ExperienceRenderSystem(Engine engine) {
+        entities = engine.getEntitiesFor(Family.all(ExperienceComponent.class, PositionComponent.class).get());
 
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
         pixmap.setColor(Color.WHITE);
@@ -34,7 +35,7 @@ public class HpRenderSystem extends EntitySystem implements RenderableSystem, Di
 
     @Override
     public void addedToEngine(Engine engine) {
-        entities = engine.getEntitiesFor(Family.all(HealthComponent.class, PositionComponent.class).get());
+        entities = engine.getEntitiesFor(Family.all(ExperienceComponent.class, PositionComponent.class).get());
     }
 
     @Override
@@ -43,22 +44,20 @@ public class HpRenderSystem extends EntitySystem implements RenderableSystem, Di
         batch.begin();
 
         for (Entity entity : entities) {
-            HealthComponent healthComponent = healthMapper.get(entity);
+            ExperienceComponent experienceComponent = xpMapper.get(entity);
             PositionComponent positionComponent = positionMapper.get(entity);
 
             float x = positionComponent.position.x + xOffset;
             float y = positionComponent.position.y - yOffset;
-            float hpPercentage = healthComponent.health / healthComponent.maxHealth;
+            float hpPercentage = experienceComponent.experience / experienceComponent.expToNextLevel;
 
-            if (hpPercentage < 1f) {
-                batch.setColor(Color.BLACK);
-                batch.draw(whiteTexture, x-4, y-4, barWidth + 8, barHeight + 8);
+            batch.setColor(Color.BLACK);
+            batch.draw(whiteTexture, x-4, y-4, barWidth + 8, barHeight + 8);
 
-                batch.draw(whiteTexture, x, y, barWidth * hpPercentage, barHeight);
+            batch.draw(whiteTexture, x, y, barWidth * hpPercentage, barHeight);
 
-                batch.setColor(Color.RED);
-                batch.draw(whiteTexture, x, y, barWidth * hpPercentage, barHeight);
-            }
+            batch.setColor(Color.BLUE);
+            batch.draw(whiteTexture, x, y, barWidth * hpPercentage, barHeight);
         }
 
         batch.setColor(Color.WHITE);
