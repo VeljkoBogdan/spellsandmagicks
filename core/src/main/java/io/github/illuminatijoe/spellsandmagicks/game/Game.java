@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.Disposable;
-import io.github.illuminatijoe.spellsandmagicks.Main;
+import io.github.illuminatijoe.spellsandmagicks.SpellsAndMagicksGame;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.Player;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.projectiles.FireballMovingSystem;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.projectiles.FireballShootingSystem;
@@ -22,7 +22,6 @@ public class Game implements Disposable {
     public Player player;
     public float deltaTime = 0f;
     public OrthographicCamera camera;
-    private final Main main;
 
     public RenderSystem renderSystem;
     public TileRendererSystem tileRendererSystem;
@@ -30,8 +29,7 @@ public class Game implements Disposable {
     public HpRenderSystem hpRenderSystem;
     public ExperienceRenderSystem experienceRenderSystem;
 
-    public Game(Main main) {
-        this.main = main;
+    public Game(SpellsAndMagicksGame spellsAndMagicksGame) {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         camera.zoom *= 1.0f;
@@ -50,8 +48,6 @@ public class Game implements Disposable {
         renderSystem = new RenderSystem(engine);
         hpRenderSystem = new HpRenderSystem(engine);
         experienceRenderSystem = new ExperienceRenderSystem(engine);
-//        engine.addSystem(tileRendererSystem);
-//        engine.addSystem(renderSystem);
         List<RenderableSystem> renderableSystems = Arrays.asList(tileRendererSystem, renderSystem, hpRenderSystem, experienceRenderSystem);
         masterRenderSystem = new MasterRenderSystem(camera, renderableSystems);
         engine.addSystem(masterRenderSystem);
@@ -69,34 +65,15 @@ public class Game implements Disposable {
         engine.addEntity(player);
     }
 
-
     public void render() {
-        if (paused) return;
-
-        deltaTime = Gdx.graphics.getDeltaTime();
+        deltaTime = paused ? 0f : Gdx.graphics.getDeltaTime();
 
         engine.update(deltaTime);
     }
 
-    public int getEntityAmount() {
-        return engine.getEntities().size();
-    }
-
-    public void pause() {
-        this.paused = true;
-    }
-
-    public void unpause() {
-        this.paused = false;
-    }
-
-    public void togglePause() {
-        paused = !paused;
-    }
-
     public void playerKilled() {
         engine.removeAllEntities();
-        this.main.showEndScreen();
+        Gdx.app.exit();
     }
 
     @Override
