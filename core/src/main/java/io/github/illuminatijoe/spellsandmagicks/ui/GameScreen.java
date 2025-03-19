@@ -15,7 +15,7 @@ public class GameScreen implements Screen {
     public GameScreen(SpellsAndMagicksGame game) {
         this.game = game;
         this.gameLogic = new Game(game, this);
-        this.levelUpMenu = new LevelUpMenu(this);
+        this.levelUpMenu = new LevelUpMenu(this, gameLogic.engine, gameLogic.player);
     }
 
     @Override

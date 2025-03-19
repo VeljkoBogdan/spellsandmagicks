@@ -11,9 +11,11 @@ import io.github.illuminatijoe.spellsandmagicks.graphics.AssetLoader;
 import io.github.illuminatijoe.spellsandmagicks.util.Collision;
 
 public class FireballShootingSystem extends IteratingSystem {
-    public static float cooldown = 1f;
-    public float cooldownTimer = 0f;
     private final ComponentMapper<PositionComponent> positionMapper = ComponentMapper.getFor(PositionComponent.class);
+
+    public float cooldown = 1f;
+    public float cooldownTimer = 0f;
+    public float damage = 50f;
 
     public FireballShootingSystem() {
         super(Family.all(ControllableComponent.class, PositionComponent.class).get());
@@ -45,7 +47,7 @@ public class FireballShootingSystem extends IteratingSystem {
         fireball.add(new AnimationComponent(AssetLoader.fireballAnimation));
         fireball.add(new PositionComponent(positionComponent.getPosition().cpy()));
         fireball.add(new FireballComponent(direction, 500f));
-        fireball.add(new AttackComponent(50f));
+        fireball.add(new AttackComponent(this.damage));
         fireball.add(new ProjectileComponent());
         fireball.add(new LifetimeComponent(3f));
 
@@ -66,5 +68,10 @@ public class FireballShootingSystem extends IteratingSystem {
         }
 
         return nearest;
+    }
+
+    public void upgrade() {
+        this.cooldown *= 0.85f;
+        this.damage *= 1.3f;
     }
 }
