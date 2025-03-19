@@ -18,6 +18,7 @@ public class MainMenuScreen implements Screen {
     private final Stage stage;
     private final SpriteBatch batch;
     private final OrthographicCamera camera;
+    private GameScreen gameScreen = null;
     // private final Texture background;
 
     public MainMenuScreen(SpellsAndMagicksGame game) {
@@ -41,7 +42,9 @@ public class MainMenuScreen implements Screen {
         playButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.setScreen(new GameScreen(game));
+                if (gameScreen == null) gameScreen = new GameScreen(game);
+
+                game.setScreen(gameScreen);
                 Gdx.input.setInputProcessor(null);
             }
         });

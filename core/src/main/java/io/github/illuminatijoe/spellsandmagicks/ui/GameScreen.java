@@ -33,7 +33,6 @@ public class GameScreen implements Screen {
 
         gameLogic.render();
 
-
         if (levelUpMenu.isVisible()) {
             levelUpMenu.render();
         }
