@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.FrameBuffer;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
@@ -18,10 +19,12 @@ public class MasterRenderSystem extends EntitySystem implements Disposable {
     private final OrthographicCamera camera;
     private ShaderProgram shader;
     private final List<RenderableSystem> renderSystems;
+    private final BitmapFont font;
 
     public MasterRenderSystem(OrthographicCamera camera, List<RenderableSystem> renderSystems) {
         this.camera = camera;
         this.renderSystems = renderSystems;
+        this.font = new BitmapFont();
         this.batch = new SpriteBatch();
 
         frameBuffer = new FrameBuffer(Pixmap.Format.RGBA8888, Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false);
@@ -68,7 +71,6 @@ public class MasterRenderSystem extends EntitySystem implements Disposable {
             batch.draw(fbTexture, -Gdx.graphics.getWidth() / 2.0f, Gdx.graphics.getHeight() / 2.0f, Gdx.graphics.getWidth(), -Gdx.graphics.getHeight());
         batch.end();
 
-        // reset shader
         batch.setShader(null);
     }
 
@@ -77,5 +79,6 @@ public class MasterRenderSystem extends EntitySystem implements Disposable {
         frameBuffer.dispose();
         batch.dispose();
         shader.dispose();
+        font.dispose();
     }
 }

@@ -9,10 +9,14 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.Player;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.*;
@@ -31,6 +35,9 @@ public class LevelUpMenu {
     private final BitmapFont font;
     private final Stage stage;
     private Texture background;
+    private Label tooltipLabel;
+    private Window tooltipWindow;
+    private Skin skin;
 
     // Spells
     private Engine engine;
@@ -51,6 +58,15 @@ public class LevelUpMenu {
         pixmap.fill();
         background = new Texture(pixmap);
         pixmap.dispose();
+
+        skin = new Skin(Gdx.files.internal("textures/ui/pixthulhu-ui.json"));
+
+        tooltipLabel = new Label("", skin);
+        tooltipWindow = new Window("", skin);
+        tooltipWindow.add(tooltipLabel).pad(10);
+        tooltipWindow.pack();
+        tooltipWindow.toFront();
+        tooltipWindow.setVisible(false);
     }
 
     public void show() {
@@ -77,8 +93,6 @@ public class LevelUpMenu {
 
             int pos = 0;
             for (Spell spell : spells) {
-                Skin skin = new Skin(Gdx.files.internal("textures/ui/pixthulhu-ui.json"));
-
                 TextButton optionButton = new TextButton(spell.getName(), skin);
                 optionButton.setSize(600, 100);
                 optionButton.setPosition(Gdx.graphics.getWidth() / 2f - 300, Gdx.graphics.getHeight() / 2f + 200 - 200 * pos);
@@ -86,17 +100,33 @@ public class LevelUpMenu {
                 optionButton.addListener(new ClickListener() {
                     @Override
                     public void clicked(InputEvent event, float x, float y) {
-
                         addSpellSystems(spell);
-
                         hide();
                     }
                 });
 
+                optionButton.addListener(new InputListener() {
+                    @Override
+                    public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                        tooltipLabel.setText(spell.getDescription());
+                        tooltipWindow.pack();
+                        tooltipWindow.toFront();
+                        tooltipWindow.setPosition(Gdx.graphics.getWidth() / 2f - tooltipWindow.getWidth() / 2f,
+                            Gdx.graphics.getHeight() - Gdx.graphics.getHeight() * 0.2f);
+                        tooltipWindow.setVisible(true);
+                    }
+
+                    @Override
+                    public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                        tooltipWindow.setVisible(false);
+                    }
+                });
+
+                stage.addActor(optionButton);
                 pos++;
-                this.stage.addActor(optionButton);
             }
 
+            stage.addActor(tooltipWindow);
         batch.end();
 
         stage.act();

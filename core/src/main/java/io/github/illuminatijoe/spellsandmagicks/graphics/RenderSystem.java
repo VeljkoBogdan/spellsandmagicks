@@ -3,6 +3,7 @@ package io.github.illuminatijoe.spellsandmagicks.graphics;
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
@@ -43,6 +44,8 @@ public class RenderSystem extends EntitySystem implements RenderableSystem {
             }
 
             batch.draw(currentFrame, position.getPosition().x, position.getPosition().y);
+
+
         }
         batch.end();
     }

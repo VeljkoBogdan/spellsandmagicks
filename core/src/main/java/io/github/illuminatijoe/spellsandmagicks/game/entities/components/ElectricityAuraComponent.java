@@ -20,8 +20,8 @@ public class ElectricityAuraComponent implements Component {
 
     public void upgrade() {
         level++;
-        this.damage *= 1.25f;
-        this.tickRate *= 0.8f;
+        this.damage *= 1.30f;
+        this.tickRate *= 0.9f;
     }
 
     public int getLevel() {

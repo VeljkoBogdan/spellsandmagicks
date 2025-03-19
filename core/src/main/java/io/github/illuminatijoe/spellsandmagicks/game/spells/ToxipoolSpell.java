@@ -8,6 +8,9 @@ public class ToxipoolSpell implements Spell{
     public static String name = "Toxipool Spell";
     public static ToxipoolShootingSystem toxipoolShootingSystem = new ToxipoolShootingSystem();
     public static ToxipoolMovingSystem toxipoolMovingSystem = new ToxipoolMovingSystem();
+    public String description = "Lobs a harmless projectile that turns into a toxic pool after a certain time, " +
+        "which lingers and deals constant damage\n" +
+        "Upgrades increase damage by 50% and reduce the cooldown by 10%";
 
     @Override
     public EntitySystem getEntityMovingSystem() {
@@ -27,5 +30,10 @@ public class ToxipoolSpell implements Spell{
     @Override
     public void upgrade() {
         toxipoolShootingSystem.upgrade();
+    }
+
+    @Override
+    public String getDescription() {
+        return description;
     }
 }

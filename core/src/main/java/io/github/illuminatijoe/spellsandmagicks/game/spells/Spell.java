@@ -8,4 +8,6 @@ public interface Spell {
     String getName();
 
     void upgrade();
+
+    String getDescription();
 }
