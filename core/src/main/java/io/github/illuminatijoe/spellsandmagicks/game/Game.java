@@ -9,6 +9,8 @@ import io.github.illuminatijoe.spellsandmagicks.SpellsAndMagicksGame;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.Player;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.projectiles.FireballMovingSystem;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.projectiles.FireballShootingSystem;
+import io.github.illuminatijoe.spellsandmagicks.game.entities.projectiles.ToxipoolPoolComponent;
+import io.github.illuminatijoe.spellsandmagicks.game.entities.projectiles.ToxipoolPoolSystem;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.systems.*;
 import io.github.illuminatijoe.spellsandmagicks.graphics.*;
 import io.github.illuminatijoe.spellsandmagicks.ui.GameScreen;
@@ -67,8 +69,10 @@ public class Game implements Disposable {
         entitySpawnerSystem = new EntitySpawnerSystem(camera, assetLoader, player);
         engine.addSystem(entitySpawnerSystem);
 
-        engine.addSystem(new CollisionSystem(32, player));
+        engine.addSystem(new CollisionSystem(256, player));
         engine.addSystem(new HealthSystem());
+        engine.addSystem(new TimedDetonationSystem());
+        engine.addSystem(new ToxipoolPoolSystem());
 //        engine.addSystem(new FireballMovingSystem());
 //        engine.addSystem(new FireballShootingSystem());
 

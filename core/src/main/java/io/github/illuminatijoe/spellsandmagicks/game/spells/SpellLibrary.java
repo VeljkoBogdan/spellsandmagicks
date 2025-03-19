@@ -9,6 +9,7 @@ public class SpellLibrary {
 
     static {
         spells.add(new FireballSpell());
+        spells.add(new ToxipoolSpell());
         // TODO add more spells
     }
 

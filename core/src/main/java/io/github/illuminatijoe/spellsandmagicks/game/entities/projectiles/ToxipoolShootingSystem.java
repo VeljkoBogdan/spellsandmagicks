@@ -1,7 +1,6 @@
 package io.github.illuminatijoe.spellsandmagicks.game.entities.projectiles;
 
 import com.badlogic.ashley.core.ComponentMapper;
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.Family;
 import com.badlogic.ashley.systems.IteratingSystem;
@@ -12,14 +11,14 @@ import io.github.illuminatijoe.spellsandmagicks.util.Collision;
 import io.github.illuminatijoe.spellsandmagicks.util.Target;
 import io.github.illuminatijoe.spellsandmagicks.util.ZIndex;
 
-public class FireballShootingSystem extends IteratingSystem {
+public class ToxipoolShootingSystem extends IteratingSystem {
     private final ComponentMapper<PositionComponent> positionMapper = ComponentMapper.getFor(PositionComponent.class);
 
-    public float cooldown = 1f;
+    public float cooldown = 2.5f;
     public float cooldownTimer = 0f;
     public float damage = 50f;
 
-    public FireballShootingSystem() {
+    public ToxipoolShootingSystem() {
         super(Family.all(ControllableComponent.class, PositionComponent.class).get());
     }
 
@@ -43,22 +42,37 @@ public class FireballShootingSystem extends IteratingSystem {
         PositionComponent enemyPos = nearestEnemy.getComponent(PositionComponent.class);
         Vector2 direction = new Vector2(enemyPos.position).sub(positionComponent.getPosition().cpy()).nor();
 
-        // Create fireball entity
-        Entity fireball = new Entity();
-        fireball.add(new CollisionComponent(Collision.FRIENDLY));
-        fireball.add(new AnimationComponent(AssetLoader.fireballAnimation));
-        fireball.add(new PositionComponent(positionComponent.getPosition().cpy()));
-        fireball.add(new FireballComponent(direction, 500f));
-        fireball.add(new AttackComponent(this.damage));
-        fireball.add(new ProjectileComponent());
-        fireball.add(new LifetimeComponent(3f));
-        fireball.add(new ZIndexComponent(ZIndex.PROJECTILES));
+        Entity toxipoolProjectile = new Entity();
+        toxipoolProjectile.add(new CollisionComponent(Collision.FRIENDLY));
+        toxipoolProjectile.add(new AnimationComponent(AssetLoader.toxipoolAnimation));
+        toxipoolProjectile.add(new PositionComponent(positionComponent.getPosition().cpy()));
+        PositionComponent projectilePosition = positionMapper.get(toxipoolProjectile);
+        toxipoolProjectile.add(new ToxipoolComponent(direction, 500f));
+        toxipoolProjectile.add(new ProjectileComponent());
+        toxipoolProjectile.add(new NonDestroyableProjectileComponent());
+        toxipoolProjectile.add(new ZIndexComponent(ZIndex.PROJECTILES));
+        toxipoolProjectile.add(new TimedDetonationComponent(0.35f, () -> {
+            Entity pool = new Entity();
+            pool.add(new CollisionComponent(Collision.FRIENDLY));
+            pool.add(new AnimationComponent(AssetLoader.toxipoolPoolAnimation));
+            pool.add(new ToxipoolPoolComponent(3f));
+            pool.add(new PositionComponent(
+                projectilePosition.getPosition().cpy().sub(64, 64)
+            ));
+            pool.add(new ZIndexComponent(ZIndex.FURTHEST));
+            pool.add(new ProjectileComponent());
+            pool.add(new AttackComponent(this.damage));
+            pool.add(new NonDestroyableProjectileComponent());
 
-        getEngine().addEntity(fireball);
+            getEngine().removeEntity(toxipoolProjectile);
+            getEngine().addEntity(pool);
+        }));
+
+        getEngine().addEntity(toxipoolProjectile);
     }
 
     public void upgrade() {
-        this.cooldown *= 0.85f;
-        this.damage *= 1.3f;
+        this.cooldown *= 0.9f;
+        this.damage *= 1.5f;
     }
 }

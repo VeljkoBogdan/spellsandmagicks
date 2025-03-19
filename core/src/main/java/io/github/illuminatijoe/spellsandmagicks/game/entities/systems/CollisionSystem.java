@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.Player;
+import io.github.illuminatijoe.spellsandmagicks.game.entities.projectiles.ToxipoolPoolComponent;
 import io.github.illuminatijoe.spellsandmagicks.util.SpatialGrid;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.*;
 
@@ -18,6 +19,8 @@ public class CollisionSystem extends EntitySystem {
     private final ComponentMapper<ProjectileComponent> projectileMapper = ComponentMapper.getFor(ProjectileComponent.class);
     private final ComponentMapper<CollisionComponent> collisionMapper = ComponentMapper.getFor(CollisionComponent.class);
     private final ComponentMapper<ExperienceComponent> experienceMapper = ComponentMapper.getFor(ExperienceComponent.class);
+    private final ComponentMapper<NonDestroyableProjectileComponent> ndpcMapper = ComponentMapper.getFor(NonDestroyableProjectileComponent.class);
+    private final ComponentMapper<ToxipoolPoolComponent> toxipoolMapper = ComponentMapper.getFor(ToxipoolPoolComponent.class);
     private final SpatialGrid spatialGrid;
     private ImmutableArray<Entity> entities;
     private Player player;
@@ -69,9 +72,6 @@ public class CollisionSystem extends EntitySystem {
         if (entity != other && aabbCollision(pm.get(entity), 22, 22, pm.get(other), 22, 22)) {
             Vector2 dir = pm.get(entity).position.cpy().sub(pm.get(other).position).nor();
 
-            pm.get(entity).position.add(dir);
-            pm.get(other).position.sub(dir);
-
             if (isAPlayer && isBEnemy) {
                 AttackComponent attackComponent = am.get(other);
                 damageEntity(entity, attackComponent.damage);
@@ -79,11 +79,37 @@ public class CollisionSystem extends EntitySystem {
                 AttackComponent attackComponent = am.get(entity);
                 damageEntity(other, attackComponent.damage);
             } else if (isAProjectile && isBEnemy) {
-                damageEntity(other, am.get(entity).damage);
-                getEngine().removeEntity(entity); // remove proj
+                if (am.has(entity)) {
+                    damageEntity(other, am.get(entity).damage);
+                }
+                if (!ndpcMapper.has(entity)) {
+                    getEngine().removeEntity(entity); // remove proj
+                }
             } else if (isBProjectile && isAEnemy) {
-                damageEntity(entity, am.get(other).damage);
-                getEngine().removeEntity(other); // remove proj
+                if (am.has(other)) {
+                    damageEntity(entity, am.get(other).damage);
+                }
+                if (!ndpcMapper.has(other)) {
+                    getEngine().removeEntity(other); // remove proj
+                }
+            } else if (isBProjectile || isAProjectile) {
+                pm.get(entity).position.add(dir);
+                pm.get(other).position.sub(dir);
+            }
+        }
+
+        boolean isAPool = entity.getComponent(ToxipoolPoolComponent.class) != null;
+        boolean isBPool = other.getComponent(ToxipoolPoolComponent.class) != null;
+
+        if (isAPool && isBEnemy) {
+            if (entity != other && aabbCollision(pm.get(entity), 128, 128, pm.get(other), 22, 22)) {
+                AttackComponent attackComponent = am.get(entity);
+                damageEntity(other, attackComponent.damage);
+            }
+        } else if (isBPool && isAEnemy) {
+            if (entity != other && aabbCollision(pm.get(entity), 22, 22, pm.get(other), 128, 128)) {
+                AttackComponent attackComponent = am.get(other);
+                damageEntity(entity, attackComponent.damage);
             }
         }
     }
@@ -96,7 +122,6 @@ public class CollisionSystem extends EntitySystem {
             if (healthComponent.isDead) {
                 ExperienceComponent xpComponent = experienceMapper.get(player);
                 xpComponent.addXp(25);
-                System.out.println(xpComponent.experience);
             }
         }
     }
