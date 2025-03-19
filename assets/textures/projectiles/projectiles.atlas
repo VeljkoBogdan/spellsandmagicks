@@ -6,33 +6,68 @@ filter: Nearest, Nearest
 repeat: none
 aura
   rotate: false
-  xy: 2, 166
+  xy: 2, 200
   size: 300, 300
   orig: 300, 300
   offset: 0, 0
   index: 1
 aura
   rotate: false
-  xy: 304, 166
+  xy: 304, 200
   size: 300, 300
   orig: 300, 300
   offset: 0, 0
   index: 2
 aura
   rotate: false
-  xy: 606, 166
+  xy: 606, 200
   size: 300, 300
   orig: 300, 300
   offset: 0, 0
   index: 3
+explosion
+  rotate: false
+  xy: 908, 400
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: 1
+explosion
+  rotate: false
+  xy: 392, 98
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: 2
+explosion
+  rotate: false
+  xy: 908, 298
+  size: 100, 100
+  orig: 100, 100
+  offset: 0, 0
+  index: 3
 fireball
   rotate: false
-  xy: 908, 434
+  xy: 2, 36
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
 fireball
+  rotate: false
+  xy: 494, 166
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+toxipool
+  rotate: false
+  xy: 908, 264
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 1
+toxipool
   rotate: false
   xy: 2, 2
   size: 32, 32
@@ -41,42 +76,28 @@ fireball
   index: 2
 toxipool
   rotate: false
-  xy: 392, 132
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: 1
-toxipool
-  rotate: false
-  xy: 908, 400
-  size: 32, 32
-  orig: 32, 32
-  offset: 0, 0
-  index: 2
-toxipool
-  rotate: false
-  xy: 942, 434
+  xy: 36, 36
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 3
 toxipool_pool
   rotate: false
-  xy: 2, 36
+  xy: 2, 70
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 1
 toxipool_pool
   rotate: false
-  xy: 132, 36
+  xy: 132, 70
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 2
 toxipool_pool
   rotate: false
-  xy: 262, 36
+  xy: 262, 70
   size: 128, 128
   orig: 128, 128
   offset: 0, 0

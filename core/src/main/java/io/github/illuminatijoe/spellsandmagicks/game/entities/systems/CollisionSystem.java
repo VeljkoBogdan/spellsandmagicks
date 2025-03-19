@@ -5,6 +5,7 @@ import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.Player;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.projectiles.ToxipoolPoolComponent;
+import io.github.illuminatijoe.spellsandmagicks.graphics.AssetLoader;
 import io.github.illuminatijoe.spellsandmagicks.util.SpatialGrid;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.*;
 
@@ -21,6 +22,7 @@ public class CollisionSystem extends EntitySystem {
     private final ComponentMapper<ExperienceComponent> experienceMapper = ComponentMapper.getFor(ExperienceComponent.class);
     private final ComponentMapper<NonDestroyableProjectileComponent> ndpcMapper = ComponentMapper.getFor(NonDestroyableProjectileComponent.class);
     private final ComponentMapper<ToxipoolPoolComponent> toxipoolMapper = ComponentMapper.getFor(ToxipoolPoolComponent.class);
+    private final ComponentMapper<ExplosionMagickComponent> explosionMagickMapper = ComponentMapper.getFor(ExplosionMagickComponent.class);
     private final SpatialGrid spatialGrid;
     private ImmutableArray<Entity> entities;
     private Player player;
@@ -122,6 +124,15 @@ public class CollisionSystem extends EntitySystem {
         HealthComponent healthComponent = hm.get(entity);
         if (healthComponent != null) {
             healthComponent.decreaseHealth(damage);
+
+            if (explosionMagickMapper.has(player)) {
+                Entity explosion = new Entity();
+                explosion.add(new ExplosionComponent(50f, 100f));
+                explosion.add(new PositionComponent(pm.get(entity).getPosition().cpy().sub(40, 40)));
+                explosion.add(new AnimationComponent(AssetLoader.explosionAnimation));
+
+                getEngine().addEntity(explosion);
+            }
 
             if (healthComponent.isDead) {
                 ExperienceComponent xpComponent = experienceMapper.get(player);

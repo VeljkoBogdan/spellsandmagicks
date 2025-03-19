@@ -75,6 +75,7 @@ public class Game implements Disposable {
         engine.addSystem(new FollowPlayerSystem(player));
         engine.addSystem(new FireballMovingSystem());
         engine.addSystem(new FireballShootingSystem());
+        engine.addSystem(new ExplosionSystem());
 
         engine.addEntity(player);
     }
