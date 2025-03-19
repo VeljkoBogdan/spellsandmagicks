@@ -54,6 +54,10 @@ public class CollisionSystem extends EntitySystem {
                 handleCollision(entity, other);
             }
         }
+
+        if (player != null && player.getComponent(ElectricityAuraComponent.class) != null) {
+            applyAuraDamage(deltaTime);
+        }
     }
 
     private void handleCollision(Entity entity, Entity other) {
@@ -122,6 +126,26 @@ public class CollisionSystem extends EntitySystem {
             if (healthComponent.isDead) {
                 ExperienceComponent xpComponent = experienceMapper.get(player);
                 xpComponent.addXp(25);
+            }
+        }
+    }
+
+    private void applyAuraDamage(float deltaTime) {
+        ElectricityAuraComponent aura = player.getComponent(ElectricityAuraComponent.class);
+        PositionComponent playerPos = pm.get(player);
+
+        if (aura == null || playerPos == null) return;
+        if (!aura.shouldDealDamage(deltaTime)) return;
+
+        Set<Entity> nearbyEntities = spatialGrid.getNearbyEntities(playerPos.position);
+
+        for (Entity entity : nearbyEntities) {
+            if (enemyMapper.has(entity)) {
+                PositionComponent enemyPos = pm.get(entity);
+
+                if (enemyPos != null && playerPos.position.dst(enemyPos.position) <= aura.range) {
+                    damageEntity(entity, aura.damage);
+                }
             }
         }
     }

@@ -2,6 +2,7 @@ package io.github.illuminatijoe.spellsandmagicks.ui;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Engine;
+import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.EntitySystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Pixmap;
@@ -14,9 +15,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.Player;
-import io.github.illuminatijoe.spellsandmagicks.game.entities.components.SpellComponent;
+import io.github.illuminatijoe.spellsandmagicks.game.entities.components.*;
+import io.github.illuminatijoe.spellsandmagicks.game.spells.ElectricityAuraSpell;
 import io.github.illuminatijoe.spellsandmagicks.game.spells.Spell;
 import io.github.illuminatijoe.spellsandmagicks.game.spells.SpellLibrary;
+import io.github.illuminatijoe.spellsandmagicks.graphics.AssetLoader;
+import io.github.illuminatijoe.spellsandmagicks.util.ZIndex;
 
 import java.util.List;
 
@@ -102,18 +106,30 @@ public class LevelUpMenu {
     private void addSpellSystems(Spell spell) {
         SpellComponent spellComponent = spellMapper.get(player);
 
-        if (!spellComponent.spells.contains(spell)) {
-            // if theres not this spell's system in the game, add it
+        if (spell instanceof ElectricityAuraSpell electricityAuraSpell) {
+            ElectricityAuraComponent auraComponent = player.getComponent(ElectricityAuraComponent.class);
+            if (auraComponent == null) {
+                player.add(electricityAuraSpell.getElectricityAuraComponent());
+                Entity aura = new Entity();
+                aura.add(new PositionComponent(player.getComponent(PositionComponent.class).getPosition().cpy()));
+                aura.add(new AnimationComponent(AssetLoader.electricityAuraAnimation));
+                aura.add(new FollowPlayerComponent(-135, -135));
+                engine.addEntity(aura);
+
+                spellComponent.addSpell(electricityAuraSpell);
+            } else {
+                auraComponent.upgrade();
+            }
+        } else {
             EntitySystem movingSystem = spell.getEntityMovingSystem();
             EntitySystem shootingSystem = spell.getEntityShootingSystem();
 
             if (movingSystem != null) engine.addSystem(movingSystem);
             if (shootingSystem != null) engine.addSystem(shootingSystem);
+
+            spellComponent.addSpell(spell);
         }
-
-        spellComponent.addSpell(spell);
     }
-
 
     public void dispose() {
         batch.dispose();

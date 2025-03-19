@@ -1,33 +1,40 @@
 
 projectiles.png
-size: 512, 256
+size: 1024, 512
 format: RGBA8888
 filter: Nearest, Nearest
 repeat: none
-fireball
+aura
   rotate: false
-  xy: 2, 36
-  size: 32, 32
-  orig: 32, 32
+  xy: 2, 166
+  size: 300, 300
+  orig: 300, 300
   offset: 0, 0
   index: 1
-fireball
+aura
   rotate: false
-  xy: 392, 166
-  size: 32, 32
-  orig: 32, 32
+  xy: 304, 166
+  size: 300, 300
+  orig: 300, 300
   offset: 0, 0
   index: 2
-toxipool
+aura
   rotate: false
-  xy: 2, 2
+  xy: 606, 166
+  size: 300, 300
+  orig: 300, 300
+  offset: 0, 0
+  index: 3
+fireball
+  rotate: false
+  xy: 908, 434
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: 1
-toxipool
+fireball
   rotate: false
-  xy: 36, 36
+  xy: 2, 2
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -38,24 +45,38 @@ toxipool
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
+  index: 1
+toxipool
+  rotate: false
+  xy: 908, 400
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: 2
+toxipool
+  rotate: false
+  xy: 942, 434
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
   index: 3
 toxipool_pool
   rotate: false
-  xy: 2, 70
+  xy: 2, 36
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 1
 toxipool_pool
   rotate: false
-  xy: 132, 70
+  xy: 132, 36
   size: 128, 128
   orig: 128, 128
   offset: 0, 0
   index: 2
 toxipool_pool
   rotate: false
-  xy: 262, 70
+  xy: 262, 36
   size: 128, 128
   orig: 128, 128
   offset: 0, 0

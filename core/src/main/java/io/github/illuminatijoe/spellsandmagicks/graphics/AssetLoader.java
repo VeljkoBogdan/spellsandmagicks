@@ -16,6 +16,7 @@ public class AssetLoader implements Disposable {
     public static Animation<TextureRegion> fireballAnimation;
     public static Animation<TextureRegion> toxipoolAnimation;
     public static Animation<TextureRegion> toxipoolPoolAnimation;
+    public static Animation<TextureRegion> electricityAuraAnimation;
 
     public AssetLoader(AssetManager assetManager) {
         this.assetManager = assetManager;
@@ -52,6 +53,11 @@ public class AssetLoader implements Disposable {
         toxipoolPoolAnimation = new Animation<>(
             0.5f,
             projectileAtlas.findRegions("toxipool_pool"),
+            Animation.PlayMode.LOOP
+        );
+        electricityAuraAnimation = new Animation<>(
+            0.25f,
+            projectileAtlas.findRegions("aura"),
             Animation.PlayMode.LOOP
         );
 
