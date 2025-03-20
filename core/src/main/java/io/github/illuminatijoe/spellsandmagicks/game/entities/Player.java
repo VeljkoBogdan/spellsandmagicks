@@ -10,8 +10,8 @@ import io.github.illuminatijoe.spellsandmagicks.util.ZIndex;
 
 public class Player extends Entity {
 
-    public Player(AssetLoader assetLoader, Game game) {
-        this.add(new AnimationComponent(assetLoader.getPlayerAnimation()));
+    public Player(Game game) {
+        this.add(new AnimationComponent(AssetLoader.playerAnimation));
         this.add(new PositionComponent(new Vector2(100, 100)));
         this.add(new VelocityComponent());
         this.add(new ControllableComponent());

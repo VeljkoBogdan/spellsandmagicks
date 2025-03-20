@@ -66,9 +66,11 @@ public class ToxipoolShootingSystem extends IteratingSystem {
 
             getEngine().removeEntity(toxipoolProjectile);
             getEngine().addEntity(pool);
+            AssetLoader.getToxipoolSpawnSound().play();
         }));
 
         getEngine().addEntity(toxipoolProjectile);
+        AssetLoader.getToxipoolShootSound().play();
     }
 
     public void upgrade() {

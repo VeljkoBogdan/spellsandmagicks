@@ -20,7 +20,7 @@ public class HealthComponent implements Component, Pool.Poolable {
         this.iFramesDuration = iFramesDuration;
     }
 
-    public void decreaseHealth(float amount) {
+    public boolean decreaseHealth(float amount) {
         if (canBeHurt) {
             this.health -= amount;
             iTimer = iFramesDuration;
@@ -31,7 +31,10 @@ public class HealthComponent implements Component, Pool.Poolable {
                     onDeath.run();
                 }
             }
+
+            return true;
         }
+        return false;
     }
 
     public void updateIFrames(float delta) {

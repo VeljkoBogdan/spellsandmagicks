@@ -8,8 +8,8 @@ import io.github.illuminatijoe.spellsandmagicks.util.Collision;
 import io.github.illuminatijoe.spellsandmagicks.util.ZIndex;
 
 public class Slime extends Entity {
-    public Slime(AssetLoader assetLoader, Player player, Vector2 pos) {
-        this.add(new AnimationComponent(assetLoader.getSlimeAnimation()));
+    public Slime(Player player, Vector2 pos) {
+        this.add(new AnimationComponent(AssetLoader.slimeAnimation));
         this.add(new PositionComponent(pos));
         this.add(new VelocityComponent());
         this.add(new TargetComponent(player));

@@ -22,7 +22,6 @@ public class Game implements Disposable {
     private final GameScreen gameScreen;
     public boolean paused = false;
     public Engine engine;
-    public AssetLoader assetLoader;
     public Player player;
     public float deltaTime = 0f;
     public OrthographicCamera camera;
@@ -44,10 +43,9 @@ public class Game implements Disposable {
         camera.update();
 
         // Load assets
-        assetLoader = new AssetLoader(new AssetManager());
-        assetLoader.load();
+        AssetLoader.load();
 
-        player = new Player(assetLoader, this);
+        player = new Player(this);
 
         // Init engine and systems
         engine = new Engine();
@@ -65,7 +63,7 @@ public class Game implements Disposable {
         engine.addSystem(new PlayerControllerSystem());
         engine.addSystem(new CameraSystem(camera));
 
-        entitySpawnerSystem = new EntitySpawnerSystem(camera, assetLoader, player);
+        entitySpawnerSystem = new EntitySpawnerSystem(camera, player);
         engine.addSystem(entitySpawnerSystem);
 
         engine.addSystem(new CollisionSystem(256, player));
@@ -93,7 +91,7 @@ public class Game implements Disposable {
 
     @Override
     public void dispose() {
-        assetLoader.dispose();
+        AssetLoader.disposeStatic();
         tileRendererSystem.dispose();
         hpRenderSystem.dispose();
         masterRenderSystem.dispose();

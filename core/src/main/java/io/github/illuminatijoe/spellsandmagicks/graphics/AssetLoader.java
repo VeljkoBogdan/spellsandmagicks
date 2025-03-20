@@ -1,16 +1,18 @@
 package io.github.illuminatijoe.spellsandmagicks.graphics;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.tools.texturepacker.TexturePacker;
 import com.badlogic.gdx.utils.Disposable;
 
-public class AssetLoader implements Disposable {
-    public TextureAtlas entityAtlas;
-    public TextureAtlas projectileAtlas;
-    public final AssetManager assetManager;
+public class AssetLoader {
+    private static final AssetManager assetManager = new AssetManager();
+    private static TextureAtlas entityAtlas;
+    private static TextureAtlas projectileAtlas;
+
     public static Animation<TextureRegion> playerAnimation;
     public static Animation<TextureRegion> slimeAnimation;
     public static Animation<TextureRegion> fireballAnimation;
@@ -19,18 +21,32 @@ public class AssetLoader implements Disposable {
     public static Animation<TextureRegion> electricityAuraAnimation;
     public static Animation<TextureRegion> explosionAnimation;
 
-    public AssetLoader(AssetManager assetManager) {
-        this.assetManager = assetManager;
+    private AssetLoader() {
+        // Private constructor to prevent instantiation
     }
 
-    public void load() {
+    public static void load() {
         createAtlases();
         loadAnimations();
+        loadSounds();
 
         System.out.println("Assets loaded!");
     }
 
-    private void loadAnimations() {
+    private static void loadSounds() {
+        assetManager.load("sounds/explosion.wav", Sound.class);
+        assetManager.load("sounds/fireball_hit.wav", Sound.class);
+        assetManager.load("sounds/fireball_shoot.wav", Sound.class);
+        assetManager.load("sounds/hit.wav", Sound.class);
+        assetManager.load("sounds/level_up.wav", Sound.class);
+        assetManager.load("sounds/player_hit.wav", Sound.class);
+        assetManager.load("sounds/toxipool_shoot.wav", Sound.class);
+        assetManager.load("sounds/toxipool_spawn_pool.wav", Sound.class);
+        assetManager.load("sounds/aura_hit.wav", Sound.class);
+        assetManager.finishLoading(); // Ensure all assets are loaded
+    }
+
+    private static void loadAnimations() {
         playerAnimation = new Animation<>(
             0.1f,
             entityAtlas.findRegions("wizard_walk"),
@@ -70,19 +86,14 @@ public class AssetLoader implements Disposable {
         System.out.println("Loaded animations!");
     }
 
-    public Animation<TextureRegion> getPlayerAnimation() {
-        return playerAnimation;
-    }
-
-    private void createAtlases() {
+    private static void createAtlases() {
         packTextures();
-
         entityAtlas = new TextureAtlas("textures/entities/entities.atlas");
         projectileAtlas = new TextureAtlas("textures/projectiles/projectiles.atlas");
         System.out.println("Atlases created!");
     }
 
-    private void packTextures() {
+    private static void packTextures() {
         TexturePacker.process(
             "textures/entities",
             "textures/entities",
@@ -98,14 +109,46 @@ public class AssetLoader implements Disposable {
         System.out.println("Textures packed!");
     }
 
-    @Override
-    public void dispose() {
+    public static void disposeStatic() {
         entityAtlas.dispose();
         projectileAtlas.dispose();
         assetManager.dispose();
     }
 
-    public Animation<TextureRegion> getSlimeAnimation() {
-        return slimeAnimation;
+    // Static Sound Accessors
+    public static Sound getHitSound() {
+        return assetManager.get("sounds/hit.wav", Sound.class);
+    }
+
+    public static Sound getExplosionSound() {
+        return assetManager.get("sounds/explosion.wav", Sound.class);
+    }
+
+    public static Sound getFireballHitSound() {
+        return assetManager.get("sounds/fireball_hit.wav", Sound.class);
+    }
+
+    public static Sound getFireballShootSound() {
+        return assetManager.get("sounds/fireball_shoot.wav", Sound.class);
+    }
+
+    public static Sound getLevelUpSound() {
+        return assetManager.get("sounds/level_up.wav", Sound.class);
+    }
+
+    public static Sound getPlayerHitSound() {
+        return assetManager.get("sounds/player_hit.wav", Sound.class);
+    }
+
+    public static Sound getToxipoolShootSound() {
+        return assetManager.get("sounds/toxipool_shoot.wav", Sound.class);
+    }
+
+    public static Sound getToxipoolSpawnSound() {
+        return assetManager.get("sounds/toxipool_spawn_pool.wav", Sound.class);
+    }
+
+    public static Sound getAuraHitSound() {
+        return assetManager.get("sounds/aura_hit.wav", Sound.class);
     }
 }

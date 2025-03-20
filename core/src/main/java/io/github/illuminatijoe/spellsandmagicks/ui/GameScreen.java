@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import io.github.illuminatijoe.spellsandmagicks.SpellsAndMagicksGame;
 import io.github.illuminatijoe.spellsandmagicks.game.Game;
+import io.github.illuminatijoe.spellsandmagicks.graphics.AssetLoader;
 
 public class GameScreen implements Screen {
     private final SpellsAndMagicksGame game;
@@ -25,6 +26,7 @@ public class GameScreen implements Screen {
     public void onLevelUp() {
         gameLogic.paused = true;
         levelUpMenu.show();
+        AssetLoader.getLevelUpSound().play(0.5f);
     }
 
     @Override

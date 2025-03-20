@@ -16,7 +16,6 @@ import io.github.illuminatijoe.spellsandmagicks.graphics.AssetLoader;
 
 public class EntitySpawnerSystem extends IteratingSystem {
     private final OrthographicCamera camera;
-    private final AssetLoader assetLoader;
     private final Player player;
     private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private final ComponentMapper<HealthComponent> healthMapper = ComponentMapper.getFor(HealthComponent.class);
@@ -25,10 +24,9 @@ public class EntitySpawnerSystem extends IteratingSystem {
     public float difficultyFactor = 1f;
     public float currentTime = 0f;
 
-    public EntitySpawnerSystem(OrthographicCamera camera, AssetLoader assetLoader, Player player) {
+    public EntitySpawnerSystem(OrthographicCamera camera, Player player) {
         super(Family.all(PositionComponent.class, ControllableComponent.class).get());
         this.camera = camera;
-        this.assetLoader = assetLoader;
         this.player = player;
     }
 
@@ -62,7 +60,7 @@ public class EntitySpawnerSystem extends IteratingSystem {
         float margin = 50f;
         Vector2 offScreenPos = getRandomOffScreenPosition(leftX, rightX, downY, upY, margin);
 
-        Slime slime = new Slime(assetLoader, player, offScreenPos);
+        Slime slime = new Slime(player, offScreenPos);
         healthMapper.get(slime).maxHealth *= difficultyFactor;
         healthMapper.get(slime).health = healthMapper.get(slime).maxHealth;
 

@@ -55,6 +55,7 @@ public class FireballShootingSystem extends IteratingSystem {
         fireball.add(new ZIndexComponent(ZIndex.PROJECTILES));
 
         getEngine().addEntity(fireball);
+        AssetLoader.getFireballShootSound().play(0.25f);
     }
 
     public void upgrade() {

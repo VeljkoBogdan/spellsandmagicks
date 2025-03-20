@@ -4,6 +4,7 @@ import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
 import com.badlogic.gdx.math.Vector2;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.Player;
+import io.github.illuminatijoe.spellsandmagicks.game.entities.projectiles.FireballComponent;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.projectiles.ToxipoolPoolComponent;
 import io.github.illuminatijoe.spellsandmagicks.graphics.AssetLoader;
 import io.github.illuminatijoe.spellsandmagicks.util.SpatialGrid;
@@ -26,7 +27,7 @@ public class CollisionSystem extends EntitySystem {
     private final ComponentMapper<PoisonMagickComponent> poisonMagickMapper = ComponentMapper.getFor(PoisonMagickComponent.class);
     private final SpatialGrid spatialGrid;
     private ImmutableArray<Entity> entities;
-    private Player player;
+    private final Player player;
 
     public CollisionSystem(int gridSize, Player player) {
         spatialGrid = new SpatialGrid(gridSize);
@@ -88,6 +89,9 @@ public class CollisionSystem extends EntitySystem {
             } else if (isAProjectile && isBEnemy) {
                 if (am.has(entity)) {
                     damageEntity(other, am.get(entity).damage);
+                    if (entity.getComponent(FireballComponent.class) != null) {
+                        AssetLoader.getFireballHitSound().play(0.25f);
+                    }
                 }
                 if (!ndpcMapper.has(entity)) {
                     getEngine().removeEntity(entity); // remove proj
@@ -95,6 +99,9 @@ public class CollisionSystem extends EntitySystem {
             } else if (isBProjectile && isAEnemy) {
                 if (am.has(other)) {
                     damageEntity(entity, am.get(other).damage);
+                    if (other.getComponent(FireballComponent.class) != null) {
+                        AssetLoader.getFireballHitSound().play(0.25f);
+                    }
                 }
                 if (!ndpcMapper.has(other)) {
                     getEngine().removeEntity(other); // remove proj
@@ -125,8 +132,15 @@ public class CollisionSystem extends EntitySystem {
 
     private void damageEntity(Entity entity, float damage) {
         HealthComponent healthComponent = hm.get(entity);
+
         if (healthComponent != null) {
-            healthComponent.decreaseHealth(damage);
+            if (healthComponent.decreaseHealth(damage)) {
+                if (playerMapper.has(entity)) {
+                    AssetLoader.getPlayerHitSound().play(0.25f);
+                } else {
+                    AssetLoader.getHitSound().play(0.05f);
+                }
+            }
 
             if (playerMapper.has(entity)) return;
             if (explosionMagickMapper.has(player)) {
@@ -136,6 +150,8 @@ public class CollisionSystem extends EntitySystem {
                 explosion.add(new AnimationComponent(AssetLoader.explosionAnimation));
 
                 getEngine().addEntity(explosion);
+
+                AssetLoader.getExplosionSound().play(0.1f);
             }
 
             if (poisonMagickMapper.has(player)) {
@@ -165,6 +181,8 @@ public class CollisionSystem extends EntitySystem {
 
                 if (enemyPos != null && playerPos.position.dst(enemyPos.position) <= aura.range) {
                     damageEntity(entity, aura.damage);
+
+                    AssetLoader.getAuraHitSound().play(0.05f);
                 }
             }
         }
