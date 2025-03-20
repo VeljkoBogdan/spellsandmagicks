@@ -12,16 +12,16 @@ public class Player extends Entity {
 
     public Player(Game game) {
         this.add(new AnimationComponent(AssetLoader.playerAnimation));
-        this.add(new PositionComponent(new Vector2(100, 100)));
+        this.add(new PositionComponent(new Vector2(0, 0)));
         this.add(new VelocityComponent());
         this.add(new ControllableComponent());
         this.add(new CameraFollowComponent());
         this.add(new CollisionComponent(Collision.FRIENDLY));
-        this.add(new HealthComponent(100f, 0.5f, game::playerKilled));
+        this.add(new HealthComponent(200f, 0.75f, game::playerKilled));
         this.add(new PlayerComponent());
         this.add(new ExperienceComponent(game));
         this.add(new SpellComponent());
         this.add(new ZIndexComponent(ZIndex.PLAYER));
-        this.add(new RegenComponent(1f, 0.5f));
+        this.add(new RegenComponent(4f, 2f));
     }
 }

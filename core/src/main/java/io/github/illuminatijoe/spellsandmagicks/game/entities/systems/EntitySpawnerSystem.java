@@ -9,6 +9,7 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.Player;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.Slime;
+import io.github.illuminatijoe.spellsandmagicks.game.entities.components.AttackComponent;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.ControllableComponent;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.HealthComponent;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.PositionComponent;
@@ -19,6 +20,7 @@ public class EntitySpawnerSystem extends IteratingSystem {
     private final Player player;
     private final ComponentMapper<PositionComponent> pm = ComponentMapper.getFor(PositionComponent.class);
     private final ComponentMapper<HealthComponent> healthMapper = ComponentMapper.getFor(HealthComponent.class);
+    private final ComponentMapper<AttackComponent> attackMapper = ComponentMapper.getFor(AttackComponent.class);
 
     public float spawnRate = 1f;
     public float difficultyFactor = 1f;
@@ -41,8 +43,8 @@ public class EntitySpawnerSystem extends IteratingSystem {
     }
 
     public void increaseDifficulty() {
-        spawnRate *= 0.9f;
-        difficultyFactor *= 1.1f;
+        spawnRate *= 0.85f;
+        difficultyFactor *= 1.15f;
     }
 
     public void spawnEntity(Entity entity, float v) {
@@ -63,6 +65,7 @@ public class EntitySpawnerSystem extends IteratingSystem {
         Slime slime = new Slime(player, offScreenPos);
         healthMapper.get(slime).maxHealth *= difficultyFactor;
         healthMapper.get(slime).health = healthMapper.get(slime).maxHealth;
+        attackMapper.get(slime).damage *= difficultyFactor;
 
         getEngine().addEntity(slime);
     }

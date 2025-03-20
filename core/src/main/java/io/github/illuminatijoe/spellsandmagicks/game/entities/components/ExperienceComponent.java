@@ -34,6 +34,6 @@ public class ExperienceComponent implements Component {
     }
 
     public void calculateExpToNextLevel() {
-        expToNextLevel = (expToNextLevel * 1.5f);
+        expToNextLevel = (expToNextLevel * 1.35f);
     }
 }
