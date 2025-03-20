@@ -2,6 +2,7 @@ package io.github.illuminatijoe.spellsandmagicks.graphics;
 
 import com.badlogic.ashley.core.*;
 import com.badlogic.ashley.utils.ImmutableArray;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -28,25 +29,25 @@ public class RenderSystem extends EntitySystem implements RenderableSystem {
         sortEntitiesByZIndex();
         batch.setProjectionMatrix(camera.combined);
         batch.begin();
-        for (Entity entity : sortedEntities) {
-            PositionComponent position = pm.get(entity);
-            AnimationComponent animation = am.get(entity);
+            for (Entity entity : sortedEntities) {
+                PositionComponent position = pm.get(entity);
+                AnimationComponent animation = am.get(entity);
 
-            if (!animation.idle) {
-                animation.stateTime += deltaTime;
+                if (!animation.idle) {
+                    animation.stateTime += deltaTime;
+                }
+
+                TextureRegion currentFrame = animation.getKeyFrame();
+
+                // Flip texture if needed:
+                if (animation.facingLeft != currentFrame.isFlipX()) {
+                    currentFrame.flip(true, false);
+                }
+
+                batch.setColor(animation.tint);
+                batch.draw(currentFrame, position.getPosition().x, position.getPosition().y);
+                batch.setColor(Color.WHITE);
             }
-
-            TextureRegion currentFrame = animation.getKeyFrame();
-
-            // Flip texture if needed:
-            if (animation.facingLeft != currentFrame.isFlipX()) {
-                currentFrame.flip(true, false);
-            }
-
-            batch.draw(currentFrame, position.getPosition().x, position.getPosition().y);
-
-
-        }
         batch.end();
     }
 

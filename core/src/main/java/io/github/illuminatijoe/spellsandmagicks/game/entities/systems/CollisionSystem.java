@@ -135,6 +135,8 @@ public class CollisionSystem extends EntitySystem {
 
         if (healthComponent != null) {
             if (healthComponent.decreaseHealth(damage)) {
+                entity.add(new DamageFlashComponent());
+
                 if (playerMapper.has(entity)) {
                     AssetLoader.getPlayerHitSound().play(0.25f);
                 } else {

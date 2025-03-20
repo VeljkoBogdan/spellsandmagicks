@@ -22,6 +22,7 @@ public class HealthComponent implements Component, Pool.Poolable {
 
     public boolean decreaseHealth(float amount) {
         if (canBeHurt) {
+
             this.health -= amount;
             iTimer = iFramesDuration;
 
