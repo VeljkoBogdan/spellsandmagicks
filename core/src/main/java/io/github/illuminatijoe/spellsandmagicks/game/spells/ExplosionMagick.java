@@ -10,7 +10,7 @@ public class ExplosionMagick implements Spell {
     public String description = "All your spells summon an explosion on hit that deals damage \n\n" +
         "Upgrades deal 25% more damage";
     public static ExplosionMagickComponent explosionMagickComponent =
-        new ExplosionMagickComponent(50f, 100f);
+        new ExplosionMagickComponent(30f, 110f);
     public static ExplosionSystem explosionSystem = new ExplosionSystem();
 
     @Override
