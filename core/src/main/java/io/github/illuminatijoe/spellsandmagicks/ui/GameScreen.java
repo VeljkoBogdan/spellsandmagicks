@@ -12,8 +12,10 @@ public class GameScreen implements Screen {
     private final SpellsAndMagicksGame game;
     private final Game gameLogic;
     private final LevelUpMenu levelUpMenu;
+    private final MainMenuScreen mainMenuScreen;
 
-    public GameScreen(SpellsAndMagicksGame game) {
+    public GameScreen(SpellsAndMagicksGame game, MainMenuScreen mainMenuScreen) {
+        this.mainMenuScreen = mainMenuScreen;
         this.game = game;
         this.gameLogic = new Game(game, this);
         this.levelUpMenu = new LevelUpMenu(this, gameLogic.engine, gameLogic.player);
@@ -39,11 +41,12 @@ public class GameScreen implements Screen {
             levelUpMenu.render();
         }
 
+        // TODO: debug; remove on release
         if (Gdx.input.isKeyJustPressed(Input.Keys.L)) {
             onLevelUp();
         }
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.setScreen(new MainMenuScreen(game));
+            game.setScreen(mainMenuScreen);
         }
     }
 
@@ -66,6 +69,7 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
         gameLogic.dispose();
+        levelUpMenu.dispose();
     }
 
     public void resumeGame() {

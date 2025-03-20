@@ -144,21 +144,22 @@ public class CollisionSystem extends EntitySystem {
                 }
             }
 
-            if (playerMapper.has(entity)) return;
-            if (explosionMagickMapper.has(player)) {
-                Entity explosion = new Entity();
-                explosion.add(new ExplosionComponent(explosionMagickMapper.get(player).damage, explosionMagickMapper.get(player).radius));
-                explosion.add(new PositionComponent(pm.get(entity).getPosition().cpy().sub(40, 40)));
-                explosion.add(new AnimationComponent(AssetLoader.explosionAnimation));
+            if (!playerMapper.has(entity)) {
+                if (explosionMagickMapper.has(player)) {
+                    Entity explosion = new Entity();
+                    explosion.add(new ExplosionComponent(explosionMagickMapper.get(player).damage, explosionMagickMapper.get(player).radius));
+                    explosion.add(new PositionComponent(pm.get(entity).getPosition().cpy().sub(40, 40)));
+                    explosion.add(new AnimationComponent(AssetLoader.explosionAnimation));
 
-                getEngine().addEntity(explosion);
+                    getEngine().addEntity(explosion);
 
-                AssetLoader.getExplosionSound().play(0.1f);
-            }
+                    AssetLoader.getExplosionSound().play(0.1f);
+                }
 
-            if (poisonMagickMapper.has(player)) {
-                PoisonMagickComponent poisonMagickComponent = poisonMagickMapper.get(player);
-                entity.add(new PoisonedComponent(poisonMagickComponent.damage, poisonMagickComponent.cooldown, poisonMagickComponent.duration));
+                if (poisonMagickMapper.has(player)) {
+                    PoisonMagickComponent poisonMagickComponent = poisonMagickMapper.get(player);
+                    entity.add(new PoisonedComponent(poisonMagickComponent.damage, poisonMagickComponent.cooldown, poisonMagickComponent.duration));
+                }
             }
 
             if (healthComponent.isDead) {
