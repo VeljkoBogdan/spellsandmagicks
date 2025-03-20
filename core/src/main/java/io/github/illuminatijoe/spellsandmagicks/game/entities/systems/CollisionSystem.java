@@ -23,6 +23,7 @@ public class CollisionSystem extends EntitySystem {
     private final ComponentMapper<NonDestroyableProjectileComponent> ndpcMapper = ComponentMapper.getFor(NonDestroyableProjectileComponent.class);
     private final ComponentMapper<ToxipoolPoolComponent> toxipoolMapper = ComponentMapper.getFor(ToxipoolPoolComponent.class);
     private final ComponentMapper<ExplosionMagickComponent> explosionMagickMapper = ComponentMapper.getFor(ExplosionMagickComponent.class);
+    private final ComponentMapper<PoisonMagickComponent> poisonMagickMapper = ComponentMapper.getFor(PoisonMagickComponent.class);
     private final SpatialGrid spatialGrid;
     private ImmutableArray<Entity> entities;
     private Player player;
@@ -53,7 +54,7 @@ public class CollisionSystem extends EntitySystem {
             Set<Entity> nearby = spatialGrid.getNearbyEntities(pos.position);
 
             for (Entity other : nearby) {
-                handleCollision(entity, other);
+                handleCollision(entity, other, deltaTime);
             }
         }
 
@@ -62,7 +63,7 @@ public class CollisionSystem extends EntitySystem {
         }
     }
 
-    private void handleCollision(Entity entity, Entity other) {
+    private void handleCollision(Entity entity, Entity other, float delta) {
         CollisionComponent collisionComponentFirstEntity = collisionMapper.get(entity);
         CollisionComponent collisionComponentSecondEntity = collisionMapper.get(other);
 
@@ -110,12 +111,14 @@ public class CollisionSystem extends EntitySystem {
         if (isAPool && isBEnemy) {
             if (entity != other && aabbCollision(pm.get(entity), 128, 128, pm.get(other), 22, 22)) {
                 AttackComponent attackComponent = am.get(entity);
-                damageEntity(other, attackComponent.damage);
+                ToxipoolPoolComponent toxipoolPoolComponent = toxipoolMapper.get(entity);
+                if (toxipoolPoolComponent.shouldDamage(delta)) damageEntity(other, attackComponent.damage);
             }
         } else if (isBPool && isAEnemy) {
             if (entity != other && aabbCollision(pm.get(entity), 22, 22, pm.get(other), 128, 128)) {
                 AttackComponent attackComponent = am.get(other);
-                damageEntity(entity, attackComponent.damage);
+                ToxipoolPoolComponent toxipoolPoolComponent = toxipoolMapper.get(other);
+                if (toxipoolPoolComponent.shouldDamage(delta)) damageEntity(entity, attackComponent.damage);
             }
         }
     }
@@ -125,13 +128,19 @@ public class CollisionSystem extends EntitySystem {
         if (healthComponent != null) {
             healthComponent.decreaseHealth(damage);
 
+            if (playerMapper.has(entity)) return;
             if (explosionMagickMapper.has(player)) {
                 Entity explosion = new Entity();
-                explosion.add(new ExplosionComponent(50f, 100f));
+                explosion.add(new ExplosionComponent(explosionMagickMapper.get(player).damage, explosionMagickMapper.get(player).radius));
                 explosion.add(new PositionComponent(pm.get(entity).getPosition().cpy().sub(40, 40)));
                 explosion.add(new AnimationComponent(AssetLoader.explosionAnimation));
 
                 getEngine().addEntity(explosion);
+            }
+
+            if (poisonMagickMapper.has(player)) {
+                PoisonMagickComponent poisonMagickComponent = poisonMagickMapper.get(player);
+                entity.add(new PoisonedComponent(poisonMagickComponent.damage, poisonMagickComponent.cooldown, poisonMagickComponent.duration));
             }
 
             if (healthComponent.isDead) {

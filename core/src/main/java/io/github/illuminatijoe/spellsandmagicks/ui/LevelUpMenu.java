@@ -20,9 +20,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.Player;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.components.*;
-import io.github.illuminatijoe.spellsandmagicks.game.spells.ElectricityAuraSpell;
-import io.github.illuminatijoe.spellsandmagicks.game.spells.Spell;
-import io.github.illuminatijoe.spellsandmagicks.game.spells.SpellLibrary;
+import io.github.illuminatijoe.spellsandmagicks.game.spells.*;
 import io.github.illuminatijoe.spellsandmagicks.graphics.AssetLoader;
 import io.github.illuminatijoe.spellsandmagicks.util.ZIndex;
 
@@ -150,6 +148,14 @@ public class LevelUpMenu {
             } else {
                 auraComponent.upgrade();
             }
+        } else if (spell instanceof ExplosionMagick explosionMagick) {
+            player.add(explosionMagick.getComponent());
+            engine.addSystem(explosionMagick.getEntityMovingSystem());
+            spellComponent.addSpell(explosionMagick);
+        } else if (spell instanceof PoisonMagick poisonMagick) {
+            player.add(poisonMagick.getComponent());
+            engine.addSystem(poisonMagick.poisonSystem);
+            spellComponent.addSpell(poisonMagick);
         } else {
             EntitySystem movingSystem = spell.getEntityMovingSystem();
             EntitySystem shootingSystem = spell.getEntityShootingSystem();

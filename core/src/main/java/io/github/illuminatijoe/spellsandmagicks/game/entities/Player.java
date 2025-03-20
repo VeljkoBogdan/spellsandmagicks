@@ -22,6 +22,6 @@ public class Player extends Entity {
         this.add(new ExperienceComponent(game));
         this.add(new SpellComponent());
         this.add(new ZIndexComponent(ZIndex.PLAYER));
-        this.add(new ExplosionMagickComponent());
+        this.add(new RegenComponent(1f, 0.5f));
     }
 }

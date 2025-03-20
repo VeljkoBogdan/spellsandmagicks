@@ -1,5 +1,6 @@
 package io.github.illuminatijoe.spellsandmagicks.game.spells;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.EntitySystem;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.projectiles.ToxipoolMovingSystem;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.projectiles.ToxipoolShootingSystem;
@@ -20,6 +21,11 @@ public class ToxipoolSpell implements Spell{
     @Override
     public EntitySystem getEntityShootingSystem() {
         return toxipoolShootingSystem;
+    }
+
+    @Override
+    public Component getComponent() {
+        return null;
     }
 
     @Override

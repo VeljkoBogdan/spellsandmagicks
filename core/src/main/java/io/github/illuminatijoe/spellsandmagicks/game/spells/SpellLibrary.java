@@ -11,6 +11,11 @@ public class SpellLibrary {
         spells.add(new FireballSpell());
         spells.add(new ToxipoolSpell());
         spells.add(new ElectricityAuraSpell());
+
+        // magicks
+        spells.add(new ExplosionMagick());
+        spells.add(new PoisonMagick());
+
         // TODO add more spells
     }
 

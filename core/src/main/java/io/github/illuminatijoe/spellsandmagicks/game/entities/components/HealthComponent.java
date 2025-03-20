@@ -49,4 +49,12 @@ public class HealthComponent implements Component, Pool.Poolable {
         canBeHurt = true;
         iFramesDuration = 0.5f;
     }
+
+    public void increaseHealth(float amount) {
+        health += amount;
+
+        if (this.health >= maxHealth) {
+            health = maxHealth;
+        }
+    }
 }

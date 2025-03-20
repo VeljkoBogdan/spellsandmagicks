@@ -1,5 +1,6 @@
 package io.github.illuminatijoe.spellsandmagicks.game.spells;
 
+import com.badlogic.ashley.core.Component;
 import com.badlogic.ashley.core.EntitySystem;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.projectiles.FireballMovingSystem;
 import io.github.illuminatijoe.spellsandmagicks.game.entities.projectiles.FireballShootingSystem;
@@ -18,6 +19,11 @@ public class FireballSpell implements Spell {
     @Override
     public EntitySystem getEntityShootingSystem() {
         return entityShootingSystem;
+    }
+
+    @Override
+    public Component getComponent() {
+        return null;
     }
 
     @Override
